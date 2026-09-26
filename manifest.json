@@ -1,0 +1,10 @@
+{
+  "name": "Compte Titre BRVM",
+  "short_name": "BRVM",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6F4EF",
+  "theme_color": "#10233F",
+  "icons": []
+}
