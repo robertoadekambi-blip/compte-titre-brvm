@@ -1,1 +1,37 @@
+name: Mise a jour automatique des cours BRVM
 
+on:
+  schedule:
+    # Tous les jours a 19h00 UTC (apres la cloture du marche BRVM, 15h GMT)
+    - cron: '0 19 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-cours:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Executer le script de mise a jour
+        run: python3 scripts/update_cours.py
+
+      - name: Enregistrer le fichier s'il a change
+        run: |
+          git config user.name "brvm-cours-bot"
+          git config user.email "actions@github.com"
+          if ! git diff --quiet -- cours-auto.json; then
+            git add cours-auto.json
+            git commit -m "Mise a jour automatique des cours BRVM"
+            git push
+          else
+            echo "Aucun changement de cours a enregistrer."
+          fi
