@@ -1,0 +1,53 @@
+{
+  "updatedAt": "2026-09-28T00:00:00+00:00",
+  "source": "https://www.brvm.org/fr/esv/paiement-de-dividendes",
+  "tickers": {
+    "CBIBF": [
+      {
+        "dateExDividende": "2025-07-03",
+        "datePaiement": "2025-07-07",
+        "exercice": 2024,
+        "montant": 555
+      },
+      {
+        "dateExDividende": "2026-06-18",
+        "datePaiement": "2026-06-19",
+        "exercice": 2025,
+        "montant": 900
+      }
+    ],
+    "BOAM": [
+      {
+        "dateExDividende": "2025-05-30",
+        "datePaiement": "2025-06-03",
+        "exercice": 2024,
+        "montant": 237.5
+      }
+    ],
+    "BOAB": [
+      {
+        "dateExDividende": "2025-05-30",
+        "datePaiement": "2025-06-03",
+        "exercice": 2024,
+        "montant": 468
+      }
+    ],
+    "BICB": [
+      {
+        "dateExDividende": "2026-07-30",
+        "datePaiement": "2026-07-31",
+        "exercice": 2025,
+        "montant": 254.6
+      }
+    ],
+    "SNTS": [
+      {
+        "dateExDividende": "2025-05-20",
+        "datePaiement": "2025-05-22",
+        "exercice": 2024,
+        "montant": 1655
+      }
+    ]
+  },
+  "non_reconnus": []
+}
