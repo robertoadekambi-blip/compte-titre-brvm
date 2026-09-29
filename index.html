@@ -892,6 +892,9 @@ function renderLiquidite(){
       '<div class="section-title">Frais &amp; autres par année</div>'+
       '<div class="card"><table class="mini"><tr><th>Année</th><th style="text-align:right">Frais</th>'+
       '<th style="text-align:right">Autres</th></tr>'+parAnneeRows+'</table></div>'+
+      '<div class="section-title">Frais liés au compte</div>'+
+      '<div class="card"><div class="row1"><span class="titre">Total des frais</span>'+
+      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFrais()))+'">'+fmt(totalFrais())+'</span></div></div>'+
       '<div class="section-title">Évolution des frais</div>'+
       vBarChartMagnitude(parAnnee.map(function(y){ return {label:String(y.annee), value:y.frais}; }), {color:'var(--brick)'})+
       (parAnnee.some(function(y){return y.autres;}) ?
