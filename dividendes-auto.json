@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-29T00:00:48.440506+00:00",
+  "updatedAt": "2026-09-29T00:13:06.418670+00:00",
   "source": "https://www.brvm.org/fr/esv/paiement-de-dividendes",
   "tickers": {
     "SMBC": [
@@ -210,6 +210,20 @@
         "montant": 570.0
       }
     ],
+    "NSBC": [
+      {
+        "dateExDividende": "2024-07-04",
+        "datePaiement": "2024-07-08",
+        "exercice": 2023,
+        "montant": 454.829
+      },
+      {
+        "dateExDividende": "2026-08-03",
+        "datePaiement": "2026-08-04",
+        "exercice": 2025,
+        "montant": 768.16
+      }
+    ],
     "LNBB": [
       {
         "dateExDividende": "2025-07-29",
@@ -284,6 +298,40 @@
         "datePaiement": "2026-09-30",
         "exercice": 2025,
         "montant": 124.0
+      }
+    ],
+    "ETIT": [
+      {
+        "dateExDividende": "2026-06-29",
+        "datePaiement": "2026-06-30",
+        "exercice": 2025,
+        "montant": 0.9
+      }
+    ],
+    "TTLS": [
+      {
+        "dateExDividende": "2024-06-26",
+        "datePaiement": "2024-06-28",
+        "exercice": 2023,
+        "montant": 207.58
+      },
+      {
+        "dateExDividende": "2024-06-27",
+        "datePaiement": "2024-06-29",
+        "exercice": 2023,
+        "montant": 207.58
+      },
+      {
+        "dateExDividende": "2025-07-09",
+        "datePaiement": "2025-07-11",
+        "exercice": 2024,
+        "montant": 222.4
+      },
+      {
+        "dateExDividende": "2026-07-16",
+        "datePaiement": "2026-07-17",
+        "exercice": 2025,
+        "montant": 176.65
       }
     ],
     "BICC": [
@@ -502,6 +550,20 @@
         "montant": 1320.0
       }
     ],
+    "PRSC": [
+      {
+        "dateExDividende": "2024-09-20",
+        "datePaiement": "2024-09-24",
+        "exercice": 2023,
+        "montant": 182.7
+      },
+      {
+        "dateExDividende": "2025-09-26",
+        "datePaiement": "2025-09-30",
+        "exercice": 2024,
+        "montant": 207.0
+      }
+    ],
     "SDSC": [
       {
         "dateExDividende": "2024-12-10",
@@ -555,69 +617,5 @@
       }
     ]
   },
-  "non_reconnus": [
-    {
-      "dateExDividende": "2026-08-03",
-      "datePaiement": "2026-08-04",
-      "exercice": 2025,
-      "montant": 768.16,
-      "emetteur": "NSBC"
-    },
-    {
-      "dateExDividende": "2026-06-29",
-      "datePaiement": "2026-06-30",
-      "exercice": 2025,
-      "montant": 0.9,
-      "emetteur": "ECOBANK TG"
-    },
-    {
-      "dateExDividende": "2026-07-16",
-      "datePaiement": "2026-07-17",
-      "exercice": 2025,
-      "montant": 176.65,
-      "emetteur": "TOTAL SENEGAL S.A."
-    },
-    {
-      "dateExDividende": "2025-09-26",
-      "datePaiement": "2025-09-30",
-      "exercice": 2024,
-      "montant": 207.0,
-      "emetteur": "TRACTAFRIC CI"
-    },
-    {
-      "dateExDividende": "2025-07-09",
-      "datePaiement": "2025-07-11",
-      "exercice": 2024,
-      "montant": 222.4,
-      "emetteur": "TOTAL SENEGAL S.A."
-    },
-    {
-      "dateExDividende": "2024-09-20",
-      "datePaiement": "2024-09-24",
-      "exercice": 2023,
-      "montant": 182.7,
-      "emetteur": "TRACTAFRIC CI"
-    },
-    {
-      "dateExDividende": "2024-07-04",
-      "datePaiement": "2024-07-08",
-      "exercice": 2023,
-      "montant": 454.829,
-      "emetteur": "NSBC"
-    },
-    {
-      "dateExDividende": "2024-06-26",
-      "datePaiement": "2024-06-28",
-      "exercice": 2023,
-      "montant": 207.58,
-      "emetteur": "TOTAL SENEGAL S.A."
-    },
-    {
-      "dateExDividende": "2024-06-27",
-      "datePaiement": "2024-06-29",
-      "exercice": 2023,
-      "montant": 207.58,
-      "emetteur": "TOTAL SENEGAL S.A."
-    }
-  ]
+  "non_reconnus": []
 }
