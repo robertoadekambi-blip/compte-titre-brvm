@@ -1106,17 +1106,23 @@ var FORMS = {
         '<div class="field"><label>Libellé</label><input id="f-libelle" value="'+esc(item.libelle)+'" placeholder="ex: Frais de tenue de compte"></div>'+
         '<div class="field"><label>Titre concerné (optionnel)</label><input id="f-titre-m" value="'+esc(item.titre||'')+'"></div>'+
         '<div class="field-row">'+
-        '<div class="field"><label>Montant (F CFA, signé)</label><input id="f-montant" type="number" step="0.01" value="'+item.montant+'"></div>'+
+        '<div class="field"><label>Montant (F CFA)</label><input id="f-montant" type="number" step="0.01" min="0" value="'+Math.abs(Number(item.montant)||0)+'"></div>'+
         '<div class="field"><label>Année</label><input id="f-annee" type="number" step="1" value="'+(item.annee||new Date().getFullYear())+'"></div>'+
         '</div>'+
         '<div class="field"><label>Date (libre)</label><input id="f-date" value="'+esc(item.date||'')+'"></div>'+
-        '<div class="helper">Montant négatif pour une sortie (frais), positif pour une entrée. Renseigne l\'année pour suivre les frais par année.</div>',
+        '<div class="helper">Saisis toujours un montant positif : un frais est automatiquement compté comme une sortie, un mouvement "Autre" comme une entrée. Renseigne l\'année pour suivre les frais par année.</div>',
+      validate: function(){
+        if(!(parseFloat(document.getElementById('f-montant').value) > 0)) return 'Indique un montant supérieur à 0.';
+        return '';
+      },
       save: function(){
+        var type = document.getElementById('f-type').value;
+        var montantAbs = Math.abs(parseFloat(document.getElementById('f-montant').value)||0);
         return {
-          type: document.getElementById('f-type').value,
+          type: type,
           libelle: document.getElementById('f-libelle').value.trim(),
           titre: document.getElementById('f-titre-m').value.trim(),
-          montant: parseFloat(document.getElementById('f-montant').value)||0,
+          montant: type === 'Frais' ? -montantAbs : montantAbs,
           annee: parseInt(document.getElementById('f-annee').value)||null,
           date: document.getElementById('f-date').value.trim()
         };
