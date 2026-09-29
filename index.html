@@ -319,6 +319,23 @@ function todayISO(){
   var d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+var MOIS_FR = {janvier:1,'février':2,fevrier:2,mars:3,avril:4,mai:5,juin:6,juillet:7,'août':8,aout:8,
+  septembre:9,octobre:10,novembre:11,'décembre':12,decembre:12};
+function dateToISO(txt){
+  // Convertit en douceur une ancienne date en texte libre ("août 2026", "2024") en une
+  // vraie date ISO, pour pre-remplir le champ date sans perdre l'information existante.
+  // Une vraie date ISO passe telle quelle ; le reste est une estimation raisonnable
+  // (1er jour du mois, ou 1er janvier si seule l'annee est connue).
+  var s = String(txt||'').trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  var mMonthYear = s.toLowerCase().match(/([a-zéû]+)\s+(\d{4})/);
+  if(mMonthYear && MOIS_FR[mMonthYear[1]]){
+    return mMonthYear[2]+'-'+String(MOIS_FR[mMonthYear[1]]).padStart(2,'0')+'-01';
+  }
+  var mYear = s.match(/^(\d{4})$/);
+  if(mYear) return mYear[1]+'-01-01';
+  return '';
+}
 function titreDatalist(){
   var seen = {}, opts = [];
   knownTitres().concat(Object.keys(autoTickers)).forEach(function(t){
@@ -710,12 +727,12 @@ function renderTopbar(){
 }
 
 function renderOperations(){
-  var rows = state.operations.map(function(o){
+  var rows = state.operations.slice().sort(byDate).map(function(o){
     var tot = Number(o.montant||0);
     return '<div class="card" data-open="operations" data-id="'+o.id+'">'+
       '<div class="row1"><span class="titre">'+esc(o.libelle)+'</span>'+
       '<span class="montant pos tabular">'+fmt(tot)+'</span></div>'+
-      '<div class="meta">'+esc(o.date)+(o.frais?(' · frais de virement '+fmt(o.frais)):'')+'</div></div>';
+      '<div class="meta">'+esc(fmtDate(o.date))+(o.frais?(' · frais de virement '+fmt(o.frais)):'')+'</div></div>';
   }).join('');
   var parAnneeFrais = fraisOperationsParAnnee();
   var totalFraisOps = totalFraisOperations();
@@ -797,7 +814,9 @@ function renderDividendes(){
   var years = Array.from(new Set(pourAffichage.map(function(d){return d.annee;}))).sort(function(a,b){return a-b;});
   var nbSuggestions = suggestions.length;
   var rows = years.map(function(y){
-    var items = pourAffichage.filter(function(d){return d.annee===y;});
+    var items = pourAffichage.filter(function(d){return d.annee===y;}).sort(function(a,b){
+      return String(a.dateDetachement||'').localeCompare(String(b.dateDetachement||''));
+    });
     var yearCards = items.map(function(d){
       var auto = d.source==='auto';
       var ecart = auto ? null : ecartAutoPourLigne(d);
@@ -861,13 +880,13 @@ function renderDividendes(){
 }
 
 function renderLiquidite(){
-  var rows = state.mouvements.map(function(m){
+  var rows = state.mouvements.slice().sort(byDate).map(function(m){
     var neg = Number(m.montant) < 0;
     return '<div class="card" data-open="mouvements" data-id="'+m.id+'">'+
       '<div class="row1"><span class="titre">'+esc(m.libelle||m.type)+'</span>'+
       '<span class="montant '+(neg?'neg':'pos')+' tabular">'+fmt(m.montant)+'</span></div>'+
       '<div class="meta">'+esc(m.type)+(m.titre?(' · '+esc(m.titre)):'')+
-      (m.annee?(' · '+m.annee):'')+' · '+esc(m.date||'')+'</div></div>';
+      ' · '+esc(fmtDate(m.date))+'</div></div>';
   }).join('');
   var lr = state.liquiditeReelle;
   var parAnnee = fraisAutresParAnnee();
@@ -1017,20 +1036,25 @@ function showExact(text){
 
 var FORMS = {
   operations: function(item){
-    item = item || {libelle:'',date:'',montant:'',frais:0};
+    item = item || {libelle:'',date:todayISO(),montant:'',frais:0};
     return {
       title: item.id ? 'Modifier le versement' : 'Nouveau versement',
       body:
         '<div class="field"><label>Libellé</label><input id="f-libelle" value="'+esc(item.libelle)+'"></div>'+
-        '<div class="field"><label>Date (libre)</label><input id="f-date" value="'+esc(item.date)+'" placeholder="ex: août 2026"></div>'+
+        '<div class="field"><label>Date</label><input id="f-date" type="date" value="'+esc(dateToISO(item.date))+'"></div>'+
         '<div class="field-row">'+
         '<div class="field"><label>Montant (F CFA)</label><input id="f-montant" type="number" step="0.01" value="'+item.montant+'"></div>'+
         '<div class="field"><label>Frais (F CFA)</label><input id="f-frais" type="number" step="0.01" value="'+(item.frais||0)+'"></div>'+
         '</div>',
+      validate: function(){
+        if(!document.getElementById('f-libelle').value.trim()) return 'Indique un libellé.';
+        if(!document.getElementById('f-date').value) return 'La date est obligatoire.';
+        return '';
+      },
       save: function(){
         return {
           libelle: document.getElementById('f-libelle').value.trim(),
-          date: document.getElementById('f-date').value.trim(),
+          date: document.getElementById('f-date').value,
           montant: parseFloat(document.getElementById('f-montant').value)||0,
           frais: parseFloat(document.getElementById('f-frais').value)||0
         };
@@ -1128,7 +1152,7 @@ var FORMS = {
     };
   },
   mouvements: function(item){
-    item = item || {type:'Frais',titre:'',libelle:'',montant:'',date:'',annee:new Date().getFullYear()};
+    item = item || {type:'Frais',titre:'',libelle:'',montant:'',date:todayISO(),annee:null};
     return {
       title: item.id ? 'Modifier le mouvement' : 'Nouveau mouvement (frais / autre)',
       body:
@@ -1139,23 +1163,24 @@ var FORMS = {
         '<div class="field"><label>Titre concerné (optionnel)</label><input id="f-titre-m" value="'+esc(item.titre||'')+'"></div>'+
         '<div class="field-row">'+
         '<div class="field"><label>Montant (F CFA)</label><input id="f-montant" type="number" step="0.01" min="0" value="'+Math.abs(Number(item.montant)||0)+'"></div>'+
-        '<div class="field"><label>Année</label><input id="f-annee" type="number" step="1" value="'+(item.annee||new Date().getFullYear())+'"></div>'+
+        '<div class="field"><label>Date</label><input id="f-date" type="date" value="'+esc(dateToISO(item.date))+'"></div>'+
         '</div>'+
-        '<div class="field"><label>Date (libre)</label><input id="f-date" value="'+esc(item.date||'')+'"></div>'+
-        '<div class="helper">Saisis toujours un montant positif : un frais est automatiquement compté comme une sortie, un mouvement "Autre" comme une entrée. Renseigne l\'année pour suivre les frais par année.</div>',
+        '<div class="helper">Saisis toujours un montant positif : un frais est automatiquement compté comme une sortie, un mouvement "Autre" comme une entrée. L\'année utilisée pour les totaux par année se déduit automatiquement de la date.</div>',
       validate: function(){
         if(!(parseFloat(document.getElementById('f-montant').value) > 0)) return 'Indique un montant supérieur à 0.';
+        if(!document.getElementById('f-date').value) return 'La date est obligatoire.';
         return '';
       },
       save: function(){
         var type = document.getElementById('f-type').value;
         var montantAbs = Math.abs(parseFloat(document.getElementById('f-montant').value)||0);
+        var dateVal = document.getElementById('f-date').value;
         return {
           type: type,
           libelle: document.getElementById('f-libelle').value.trim(),
           titre: document.getElementById('f-titre-m').value.trim(),
           montant: type === 'Frais' ? -montantAbs : montantAbs,
-          annee: parseInt(document.getElementById('f-annee').value)||null,
+          annee: dateVal ? parseInt(dateVal.slice(0,4)) : null,
           date: document.getElementById('f-date').value.trim()
         };
       },
