@@ -737,13 +737,13 @@ function renderOperations(){
   var parAnneeFrais = fraisOperationsParAnnee();
   var totalFraisOps = totalFraisOperations();
   return '<div class="total-strip"><span class="label">Total des fonds versés</span>'+
-    '<span class="value tabular" data-exact="'+esc(fmtFull(total1()))+'">'+fmt(total1())+'</span></div>'+
+    '<span class="value tabular" data-exact="'+esc(fmtFull(total1()))+'" data-desc="Somme de tous tes versements sur le compte, hors frais de virement bancaire.">'+fmt(total1())+'</span></div>'+
     '<div class="section-title">Historique des versements</div>'+
     (rows || '<div class="empty">Aucun versement enregistré</div>')+
     (totalFraisOps ?
       '<div class="section-title">Frais de virement bancaire</div>'+
       '<div class="card"><div class="row1"><span class="titre">Total des frais payés</span>'+
-      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFraisOps))+'">'+fmt(totalFraisOps)+'</span></div></div>'+
+      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFraisOps))+'" data-desc="Somme des frais payés pour effectuer tes virements — n\'entre dans aucun calcul de l\'app.">'+fmt(totalFraisOps)+'</span></div></div>'+
       vBarChartMagnitude(parAnneeFrais.map(function(y){ return {label:String(y.annee), value:y.total}; }), {color:'var(--brick)'})+
       '<div class="helper">Ces frais servent uniquement à effectuer les virements — ils ne sont jamais crédités sur le compte. Ils sont suivis ici pour information seulement, et n\'entrent dans aucun total ni calcul de l\'application.</div>'
       : '');
@@ -781,7 +781,7 @@ function renderPortefeuille(){
       '</div></div>';
   }).join('');
   return '<div class="total-strip"><span class="label">Total investi en titres</span>'+
-    '<span class="value tabular" data-exact="'+esc(fmtFull(total2()))+'">'+fmt(total2())+'</span></div>'+
+    '<span class="value tabular" data-exact="'+esc(fmtFull(total2()))+'" data-desc="Somme de (prix d\'achat moyen pondéré × quantité) pour chaque titre, avant toute vente.">'+fmt(total2())+'</span></div>'+
     '<div class="section-title">Achats</div>'+
     (achatsRows || '<div class="empty">Aucun achat enregistré</div>')+
     '<div class="section-title-row"><span class="section-title" style="margin:0">Ventes</span>'+
@@ -852,7 +852,7 @@ function renderDividendes(){
   var titreTotalRow = '<tr style="font-weight:600;border-top:1.5px solid var(--line);">'+
     '<td>Total</td><td class="num tabular">'+fmt(totalDividendesAll())+'</td></tr>';
   return '<div class="total-strip"><span class="label">Total dividendes reçus</span>'+
-    '<span class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'">'+fmt(totalDividendesAll())+'</span></div>'+
+    '<span class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus sur les titres que tu détenais à chaque date de détachement.">'+fmt(totalDividendesAll())+'</span></div>'+
     (nbSuggestions ? '<div class="helper" style="background:var(--gold-soft);border-radius:9px;padding:10px 12px;margin-bottom:6px;">'+
       nbSuggestions+' dividende(s) trouvé(s) automatiquement pour tes titres, pas encore validés. Appuie sur une carte marquée « suggéré » pour vérifier et enregistrer.</div>' : '')+
     (rows || '<div class="section-title">Détail par année</div><div class="empty">Aucun dividende enregistré</div>')+
@@ -895,11 +895,11 @@ function renderLiquidite(){
       '<td class="num tabular">'+fmt(y.autres)+'</td></tr>';
   }).join('');
   return '<div class="metric-grid">'+
-    '<div class="metric"><div class="label">Total dividendes</div><div class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'">'+fmt(totalDividendesAll())+'</div></div>'+
-    '<div class="metric"><div class="label">Total ventes</div><div class="value tabular" data-exact="'+esc(fmtFull(totalVentes()))+'">'+fmt(totalVentes())+'</div></div>'+
-    '<div class="metric"><div class="label">Total frais</div><div class="value tabular" data-exact="'+esc(fmtFull(totalFrais()))+'">'+fmt(totalFrais())+'</div></div>'+
-    '<div class="metric"><div class="label">Autres mouvements</div><div class="value tabular" data-exact="'+esc(fmtFull(totalAutres()))+'">'+fmt(totalAutres())+'</div></div>'+
-    '<div class="metric wide"><div class="label">Liquidité théorique</div><div class="value tabular" data-exact="'+esc(fmtFull(liquiditeTheorique()))+'">'+fmt(liquiditeTheorique())+'</div></div>'+
+    '<div class="metric"><div class="label">Total dividendes</div><div class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus, identique à celle de l\'onglet Dividendes.">'+fmt(totalDividendesAll())+'</div></div>'+
+    '<div class="metric"><div class="label">Total ventes</div><div class="value tabular" data-exact="'+esc(fmtFull(totalVentes()))+'" data-desc="Somme encaissée sur tes ventes de titres (quantité × prix de vente).">'+fmt(totalVentes())+'</div></div>'+
+    '<div class="metric"><div class="label">Total frais</div><div class="value tabular" data-exact="'+esc(fmtFull(totalFrais()))+'" data-desc="Somme des mouvements de type Frais, toujours comptés en sortie.">'+fmt(totalFrais())+'</div></div>'+
+    '<div class="metric"><div class="label">Autres mouvements</div><div class="value tabular" data-exact="'+esc(fmtFull(totalAutres()))+'" data-desc="Somme des mouvements de type Autre, toujours comptés en entrée.">'+fmt(totalAutres())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Liquidité théorique</div><div class="value tabular" data-exact="'+esc(fmtFull(liquiditeTheorique()))+'" data-desc="Fonds versés moins investi en titres, plus dividendes, frais, autres mouvements et ventes.">'+fmt(liquiditeTheorique())+'</div></div>'+
     '</div>'+
     '<div class="card" data-open="liquidite-reelle" data-id="liquidite-reelle">'+
     '<div class="row1"><span class="titre">Liquidité réelle actuelle</span>'+
@@ -913,7 +913,7 @@ function renderLiquidite(){
       '<th style="text-align:right">Autres</th></tr>'+parAnneeRows+'</table></div>'+
       '<div class="section-title">Frais liés au compte</div>'+
       '<div class="card"><div class="row1"><span class="titre">Total des frais</span>'+
-      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFrais()))+'">'+fmt(totalFrais())+'</span></div></div>'+
+      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFrais()))+'" data-desc="Somme des mouvements de type Frais liés au compte (hors frais de virement).">'+fmt(totalFrais())+'</span></div></div>'+
       '<div class="section-title">Évolution des frais</div>'+
       vBarChartMagnitude(parAnnee.map(function(y){ return {label:String(y.annee), value:y.frais}; }), {color:'var(--brick)'})+
       (parAnnee.some(function(y){return y.autres;}) ?
@@ -923,6 +923,9 @@ function renderLiquidite(){
     '<div class="helper">Renseigne l\'année sur chaque frais/autre mouvement pour le voir apparaître dans la table par année. '+
     'Les dividendes et les ventes n\'apparaissent pas ici en saisie : ils viennent automatiquement des onglets Dividendes et Titres.</div>';
 }
+function valeurGlobaleCompte(){
+  return Number(state.liquiditeReelle.montant||0) + valeurMarchandeTotal();
+}
 function renderSynthese(){
   var e = ecart();
   var pv = plusValueTotal();
@@ -931,17 +934,18 @@ function renderSynthese(){
   var perf = performanceGlobale();
   var coursOk = toutCoursRenseignes();
   return '<div class="metric-grid">'+
-    '<div class="metric"><div class="label">Total des fonds versés</div><div class="value tabular" data-exact="'+esc(fmtFull(total1()))+'">'+fmt(total1())+'</div></div>'+
-    '<div class="metric"><div class="label">Total investi en titres (brut)</div><div class="value tabular" data-exact="'+esc(fmtFull(total2()))+'">'+fmt(total2())+'</div></div>'+
-    '<div class="metric"><div class="label">Total dividendes reçus</div><div class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'">'+fmt(totalDividendesAll())+'</div></div>'+
-    '<div class="metric"><div class="label">Total ventes d\'actions</div><div class="value tabular" data-exact="'+esc(fmtFull(totalVentes()))+'">'+fmt(totalVentes())+'</div></div>'+
-    '<div class="metric wide"><div class="label">Plus/moins-value réalisée</div><div class="value tabular" data-exact="'+esc(fmtFull(pv))+'" style="color:'+(pv>=0?'var(--good)':'var(--bad)')+'">'+fmt(pv)+'</div></div>'+
-    '<div class="metric wide"><div class="label">Valeur actuelle du portefeuille'+(coursOk?'':' <span style="font-weight:400;opacity:.6;">(cours partiels)</span>')+'</div><div class="value tabular" data-exact="'+esc(fmtFull(valMarch))+'">'+fmt(valMarch)+'</div></div>'+
-    '<div class="metric wide"><div class="label">Plus/moins-value latente</div><div class="value tabular" data-exact="'+esc(fmtFull(pvLatente))+'" style="color:'+(pvLatente>=0?'var(--good)':'var(--bad)')+'">'+fmt(pvLatente)+'</div></div>'+
+    '<div class="metric"><div class="label">Total des fonds versés</div><div class="value tabular" data-exact="'+esc(fmtFull(total1()))+'" data-desc="Somme de tous tes versements sur le compte, hors frais de virement bancaire.">'+fmt(total1())+'</div></div>'+
+    '<div class="metric"><div class="label">Total investi en titres (brut)</div><div class="value tabular" data-exact="'+esc(fmtFull(total2()))+'" data-desc="Somme de (prix d\'achat moyen pondéré × quantité) pour chaque titre, avant toute vente.">'+fmt(total2())+'</div></div>'+
+    '<div class="metric"><div class="label">Total dividendes reçus</div><div class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus sur les titres que tu détenais à chaque date de détachement.">'+fmt(totalDividendesAll())+'</div></div>'+
+    '<div class="metric"><div class="label">Total ventes d\'actions</div><div class="value tabular" data-exact="'+esc(fmtFull(totalVentes()))+'" data-desc="Somme encaissée sur tes ventes de titres (quantité × prix de vente).">'+fmt(totalVentes())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Plus/moins-value réalisée</div><div class="value tabular" data-exact="'+esc(fmtFull(pv))+'" data-desc="Différence entre le prix de vente et le CUMP au moment de la vente, sur toutes tes ventes." style="color:'+(pv>=0?'var(--good)':'var(--bad)')+'">'+fmt(pv)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Valeur actuelle du portefeuille'+(coursOk?'':' <span style="font-weight:400;opacity:.6;">(cours partiels)</span>')+'</div><div class="value tabular" data-exact="'+esc(fmtFull(valMarch))+'" data-desc="Pour chaque titre détenu : quantité × cours actuel (ou CUMP si aucun cours n\'est renseigné), puis somme.">'+fmt(valMarch)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Plus/moins-value latente</div><div class="value tabular" data-exact="'+esc(fmtFull(pvLatente))+'" data-desc="Différence entre le cours actuel et le CUMP, sur les titres que tu détiens encore." style="color:'+(pvLatente>=0?'var(--good)':'var(--bad)')+'">'+fmt(pvLatente)+'</div></div>'+
     '<div class="metric wide"><div class="label">Performance globale</div><div class="value tabular" style="color:'+(perf>=0?'var(--good)':'var(--bad)')+'">'+fmtPct(perf)+'</div></div>'+
-    '<div class="metric wide"><div class="label">Liquidité théorique</div><div class="value tabular" data-exact="'+esc(fmtFull(liquiditeTheorique()))+'">'+fmt(liquiditeTheorique())+'</div></div>'+
-    '<div class="metric wide"><div class="label">Liquidité réelle actuelle</div><div class="value tabular" data-exact="'+esc(fmtFull(state.liquiditeReelle.montant))+'">'+fmt(state.liquiditeReelle.montant)+'</div></div>'+
-    '<div class="metric wide"><div class="label">Écart</div><div class="value tabular" data-exact="'+esc(fmtFull(e))+'" style="color:'+(Math.abs(e)<1?'var(--good)':'var(--bad)')+'">'+fmt(e)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Liquidité théorique</div><div class="value tabular" data-exact="'+esc(fmtFull(liquiditeTheorique()))+'" data-desc="Fonds versés moins investi en titres, plus dividendes, frais, autres mouvements et ventes.">'+fmt(liquiditeTheorique())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Liquidité réelle actuelle</div><div class="value tabular" data-exact="'+esc(fmtFull(state.liquiditeReelle.montant))+'" data-desc="Le montant que tu actualises toi-même, d\'après ton relevé de compte réel.">'+fmt(state.liquiditeReelle.montant)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Valeur globale du compte (liquidité réelle + portefeuille)</div><div class="value tabular" data-exact="'+esc(fmtFull(valeurGlobaleCompte()))+'" data-desc="Liquidité réelle + valeur actuelle du portefeuille : ce que vaut ton compte aujourd\'hui.">'+fmt(valeurGlobaleCompte())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Écart</div><div class="value tabular" data-exact="'+esc(fmtFull(e))+'" data-desc="Différence entre la liquidité réelle et la liquidité théorique — un écart signale un mouvement non saisi." style="color:'+(Math.abs(e)<1?'var(--good)':'var(--bad)')+'">'+fmt(e)+'</div></div>'+
     '</div>'+
     '<div class="section-title">Sauvegarde</div>'+
     '<div class="card">'+
@@ -1026,9 +1030,10 @@ function openSheet(html){
   sheetEl.innerHTML = html;
   overlay.classList.add('show');
 }
-function showExact(text){
+function showExact(text, desc){
   openSheet('<h3>Montant exact</h3>'+
-    '<div style="font-size:1.15rem;font-weight:700;font-family:\'Source Serif 4\',serif;margin-bottom:18px;">'+esc(text)+'</div>'+
+    '<div style="font-size:1.15rem;font-weight:700;font-family:\'Source Serif 4\',serif;margin-bottom:'+(desc?'10px':'18px')+';">'+esc(text)+'</div>'+
+    (desc ? '<div class="helper" style="margin:0 0 16px;">'+esc(desc)+'</div>' : '')+
     '<div class="sheet-actions"><button class="btn primary" id="btn-close-exact">Fermer</button></div>');
   document.getElementById('btn-close-exact').onclick = closeSheet;
 }
@@ -1880,7 +1885,7 @@ document.getElementById('app').addEventListener('click', function(e){
   }
   var exactEl = e.target.closest('[data-exact]');
   if(exactEl){
-    showExact(exactEl.dataset.exact);
+    showExact(exactEl.dataset.exact, exactEl.dataset.desc||'');
     return;
   }
   var addBtn = e.target.closest('[data-add]');
