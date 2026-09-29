@@ -776,7 +776,7 @@ function renderPortefeuille(){
       '<span class="montant tabular">'+fmt(valeur)+'</span></div>'+
       '<div class="meta">'+p.qte+' titres · CUMP '+fmt(cumpOf(p.titre))+
       (cours!=null
-        ? (' · cours '+fmt(cours)+sourceLabel+' · '+(pv>=0?'plus-value latente ':'moins-value latente ')+fmt(Math.abs(pv)))
+        ? (' · cours <strong style="color:var(--gold);">'+fmt(cours)+'</strong>'+sourceLabel+' · '+(pv>=0?'plus-value latente ':'moins-value latente ')+fmt(Math.abs(pv)))
         : ' · cours non renseigné — appuie pour le saisir')+
       '</div></div>';
   }).join('');
