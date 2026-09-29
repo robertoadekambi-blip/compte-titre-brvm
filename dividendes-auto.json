@@ -1,38 +1,270 @@
 {
-  "updatedAt": "2026-09-28T00:00:00+00:00",
+  "updatedAt": "2026-09-29T00:00:48.440506+00:00",
   "source": "https://www.brvm.org/fr/esv/paiement-de-dividendes",
   "tickers": {
-    "CBIBF": [
+    "SMBC": [
       {
-        "dateExDividende": "2025-07-03",
-        "datePaiement": "2025-07-07",
-        "exercice": 2024,
-        "montant": 555
+        "dateExDividende": "2024-09-26",
+        "datePaiement": "2024-09-30",
+        "exercice": 2023,
+        "montant": 1080.0
       },
       {
-        "dateExDividende": "2026-06-18",
-        "datePaiement": "2026-06-19",
+        "dateExDividende": "2026-09-17",
+        "datePaiement": "2026-09-18",
         "exercice": 2025,
-        "montant": 900
+        "montant": 800.0
       }
     ],
-    "BOAM": [
+    "SDCC": [
       {
-        "dateExDividende": "2025-05-30",
-        "datePaiement": "2025-06-03",
-        "exercice": 2024,
-        "montant": 237.5
+        "dateExDividende": "2024-09-23",
+        "datePaiement": "2024-09-25",
+        "exercice": 2023,
+        "montant": 481.5
+      },
+      {
+        "dateExDividende": "2026-09-15",
+        "datePaiement": "2026-09-16",
+        "exercice": 2025,
+        "montant": 525.0
       }
     ],
-    "BOAB": [
+    "NEIC": [
       {
-        "dateExDividende": "2025-05-30",
-        "datePaiement": "2025-06-03",
+        "dateExDividende": "2024-06-21",
+        "datePaiement": "2024-06-25",
+        "exercice": 2023,
+        "montant": 81.78
+      },
+      {
+        "dateExDividende": "2026-09-09",
+        "datePaiement": "2026-09-10",
+        "exercice": 2025,
+        "montant": 159.54
+      }
+    ],
+    "SHEC": [
+      {
+        "dateExDividende": "2024-09-25",
+        "datePaiement": "2024-09-27",
+        "exercice": 2023,
+        "montant": 57.0
+      },
+      {
+        "dateExDividende": "2025-10-20",
+        "datePaiement": "2025-10-22",
         "exercice": 2024,
-        "montant": 468
+        "montant": 85.56
+      },
+      {
+        "dateExDividende": "2026-09-24",
+        "datePaiement": "2026-09-25",
+        "exercice": 2025,
+        "montant": 96.67
+      }
+    ],
+    "TTLC": [
+      {
+        "dateExDividende": "2024-09-12",
+        "datePaiement": "2024-09-17",
+        "exercice": 2023,
+        "montant": 199.5353
+      },
+      {
+        "dateExDividende": "2024-09-13",
+        "datePaiement": "2024-09-17",
+        "exercice": 2023,
+        "montant": 199.5353
+      },
+      {
+        "dateExDividende": "2025-09-01",
+        "datePaiement": "2025-09-03",
+        "exercice": 2024,
+        "montant": 222.3578
+      },
+      {
+        "dateExDividende": "2026-08-28",
+        "datePaiement": "2026-08-31",
+        "exercice": 2025,
+        "montant": 158.827
+      }
+    ],
+    "SPHC": [
+      {
+        "dateExDividende": "2024-08-08",
+        "datePaiement": "2024-08-12",
+        "exercice": 2023,
+        "montant": 64.8
+      },
+      {
+        "dateExDividende": "2025-07-15",
+        "datePaiement": "2025-07-17",
+        "exercice": 2024,
+        "montant": 368.0
+      },
+      {
+        "dateExDividende": "2026-08-27",
+        "datePaiement": "2026-08-28",
+        "exercice": 2025,
+        "montant": 489.0
+      }
+    ],
+    "SGBC": [
+      {
+        "dateExDividende": "2024-06-21",
+        "datePaiement": "2024-06-25",
+        "exercice": 2022,
+        "montant": 1553.847
+      },
+      {
+        "dateExDividende": "2025-08-01",
+        "datePaiement": "2025-08-05",
+        "exercice": 2024,
+        "montant": 1863.0
+      },
+      {
+        "dateExDividende": "2026-08-21",
+        "datePaiement": "2026-08-24",
+        "exercice": 2025,
+        "montant": 2606.0
+      }
+    ],
+    "NTLC": [
+      {
+        "dateExDividende": "2024-07-16",
+        "datePaiement": "2024-07-20",
+        "exercice": 2023,
+        "montant": 675.0
+      },
+      {
+        "dateExDividende": "2025-08-13",
+        "datePaiement": "2025-08-18",
+        "exercice": 2024,
+        "montant": 820.0
+      },
+      {
+        "dateExDividende": "2026-09-04",
+        "datePaiement": "2026-09-07",
+        "exercice": 2025,
+        "montant": 420.0
+      }
+    ],
+    "CFAC": [
+      {
+        "dateExDividende": "2024-08-28",
+        "datePaiement": "2024-08-30",
+        "exercice": 2023,
+        "montant": 15.87
+      },
+      {
+        "dateExDividende": "2025-08-14",
+        "datePaiement": "2025-08-19",
+        "exercice": 2024,
+        "montant": 8.0
+      },
+      {
+        "dateExDividende": "2026-08-13",
+        "datePaiement": "2026-08-14",
+        "exercice": 2025,
+        "montant": 63.0
+      }
+    ],
+    "STBC": [
+      {
+        "dateExDividende": "2024-07-25",
+        "datePaiement": "2024-07-29",
+        "exercice": 2023,
+        "montant": 675.0
+      },
+      {
+        "dateExDividende": "2025-08-27",
+        "datePaiement": "2025-08-29",
+        "exercice": 2024,
+        "montant": 2375.0
+      },
+      {
+        "dateExDividende": "2026-08-12",
+        "datePaiement": "2026-08-13",
+        "exercice": 2025,
+        "montant": 1707.2
+      }
+    ],
+    "SOGC": [
+      {
+        "dateExDividende": "2024-08-02",
+        "datePaiement": "2024-08-06",
+        "exercice": 2023,
+        "montant": 207.0
+      },
+      {
+        "dateExDividende": "2025-07-11",
+        "datePaiement": "2025-07-15",
+        "exercice": 2024,
+        "montant": 600.0
+      },
+      {
+        "dateExDividende": "2026-07-05",
+        "datePaiement": "2026-08-06",
+        "exercice": 2025,
+        "montant": 570.0
+      }
+    ],
+    "LNBB": [
+      {
+        "dateExDividende": "2025-07-29",
+        "datePaiement": "2025-07-31",
+        "exercice": 2024,
+        "montant": 275.5
+      },
+      {
+        "dateExDividende": "2026-07-31",
+        "datePaiement": "2026-08-03",
+        "exercice": 2025,
+        "montant": 164.1709
+      }
+    ],
+    "SLBC": [
+      {
+        "dateExDividende": "2025-07-25",
+        "datePaiement": "2025-07-29",
+        "exercice": 2024,
+        "montant": 1220.0
+      },
+      {
+        "dateExDividende": "2026-07-29",
+        "datePaiement": "2026-07-30",
+        "exercice": 2025,
+        "montant": 2127.0
+      }
+    ],
+    "CIEC": [
+      {
+        "dateExDividende": "2024-07-26",
+        "datePaiement": "2024-07-30",
+        "exercice": 2023,
+        "montant": 171.0
+      },
+      {
+        "dateExDividende": "2025-07-29",
+        "datePaiement": "2025-07-31",
+        "exercice": 2024,
+        "montant": 180.0
+      },
+      {
+        "dateExDividende": "2026-07-27",
+        "datePaiement": "2026-07-28",
+        "exercice": 2025,
+        "montant": 234.0
       }
     ],
     "BICB": [
+      {
+        "dateExDividende": "2025-09-11",
+        "datePaiement": "2025-09-15",
+        "exercice": 2024,
+        "montant": 254.6
+      },
       {
         "dateExDividende": "2026-07-30",
         "datePaiement": "2026-07-31",
@@ -40,14 +272,352 @@
         "montant": 254.6
       }
     ],
+    "ABJC": [
+      {
+        "dateExDividende": "2024-09-26",
+        "datePaiement": "2024-09-30",
+        "exercice": 2023,
+        "montant": 206.195
+      },
+      {
+        "dateExDividende": "2026-09-29",
+        "datePaiement": "2026-09-30",
+        "exercice": 2025,
+        "montant": 124.0
+      }
+    ],
+    "BICC": [
+      {
+        "dateExDividende": "2024-06-25",
+        "datePaiement": "2024-06-27",
+        "exercice": 2023,
+        "montant": 540.9
+      },
+      {
+        "dateExDividende": "2025-05-21",
+        "datePaiement": "2025-05-23",
+        "exercice": 2024,
+        "montant": 944.0
+      },
+      {
+        "dateExDividende": "2026-07-03",
+        "datePaiement": "2026-07-06",
+        "exercice": 2025,
+        "montant": 1315.0
+      }
+    ],
+    "PALC": [
+      {
+        "dateExDividende": "2024-07-24",
+        "datePaiement": "2024-07-26",
+        "exercice": 2023,
+        "montant": 563.306
+      },
+      {
+        "dateExDividende": "2025-09-08",
+        "datePaiement": "2025-09-10",
+        "exercice": 2024,
+        "montant": 513.012
+      },
+      {
+        "dateExDividende": "2026-06-26",
+        "datePaiement": "2026-06-29",
+        "exercice": 2025,
+        "montant": 501.596
+      }
+    ],
+    "CBIBF": [
+      {
+        "dateExDividende": "2024-07-03",
+        "datePaiement": "2024-07-05",
+        "exercice": 2023,
+        "montant": 790.0
+      },
+      {
+        "dateExDividende": "2025-07-03",
+        "datePaiement": "2025-07-07",
+        "exercice": 2024,
+        "montant": 555.0
+      },
+      {
+        "dateExDividende": "2026-06-18",
+        "datePaiement": "2026-06-19",
+        "exercice": 2025,
+        "montant": 900.0
+      }
+    ],
+    "ORAC": [
+      {
+        "dateExDividende": "2024-05-30",
+        "datePaiement": "2024-06-03",
+        "exercice": 2023,
+        "montant": 780.0
+      },
+      {
+        "dateExDividende": "2025-06-05",
+        "datePaiement": "2025-06-11",
+        "exercice": 2024,
+        "montant": 750.0
+      },
+      {
+        "dateExDividende": "2026-06-05",
+        "datePaiement": "2026-06-08",
+        "exercice": 2025,
+        "montant": 800.0
+      }
+    ],
+    "ONTBF": [
+      {
+        "dateExDividende": "2024-08-01",
+        "datePaiement": "2024-07-31",
+        "exercice": 2023,
+        "montant": 266.44625
+      },
+      {
+        "dateExDividende": "2025-07-17",
+        "datePaiement": "2025-07-21",
+        "exercice": 2024,
+        "montant": 189.5299
+      },
+      {
+        "dateExDividende": "2026-06-12",
+        "datePaiement": "2026-06-15",
+        "exercice": 2025,
+        "montant": 145.3214
+      }
+    ],
+    "BOAM": [
+      {
+        "dateExDividende": "2024-05-16",
+        "datePaiement": "2024-05-21",
+        "exercice": 2023,
+        "montant": 144.0
+      },
+      {
+        "dateExDividende": "2025-05-30",
+        "datePaiement": "2025-06-03",
+        "exercice": 2024,
+        "montant": 237.5
+      },
+      {
+        "dateExDividende": "2026-06-02",
+        "datePaiement": "2026-06-03",
+        "exercice": 2025,
+        "montant": 305.04
+      }
+    ],
+    "ECOC": [
+      {
+        "dateExDividende": "2024-05-28",
+        "datePaiement": "2024-05-30",
+        "exercice": 2023,
+        "montant": 594.0
+      },
+      {
+        "dateExDividende": "2025-05-31",
+        "datePaiement": "2025-05-30",
+        "exercice": 2024,
+        "montant": 804.0
+      },
+      {
+        "dateExDividende": "2026-05-22",
+        "datePaiement": "2026-05-26",
+        "exercice": 2025,
+        "montant": 888.0
+      }
+    ],
+    "BOAS": [
+      {
+        "dateExDividende": "2024-06-25",
+        "datePaiement": "2024-06-27",
+        "exercice": 2023,
+        "montant": 300.0
+      },
+      {
+        "dateExDividende": "2025-05-28",
+        "datePaiement": "2025-06-02",
+        "exercice": 2024,
+        "montant": 350.0
+      },
+      {
+        "dateExDividende": "2026-05-29",
+        "datePaiement": "2026-06-01",
+        "exercice": 2025,
+        "montant": 450.0
+      }
+    ],
+    "BOAB": [
+      {
+        "dateExDividende": "2025-05-30",
+        "datePaiement": "2025-06-03",
+        "exercice": 2024,
+        "montant": 468.0
+      },
+      {
+        "dateExDividende": "2026-05-22",
+        "datePaiement": "2026-05-26",
+        "exercice": 2025,
+        "montant": 585.0
+      }
+    ],
     "SNTS": [
       {
         "dateExDividende": "2025-05-20",
         "datePaiement": "2025-05-22",
         "exercice": 2024,
-        "montant": 1655
+        "montant": 1655.0
+      },
+      {
+        "dateExDividende": "2026-05-22",
+        "datePaiement": "2026-05-26",
+        "exercice": 2025,
+        "montant": 1740.0
+      }
+    ],
+    "BOABF": [
+      {
+        "dateExDividende": "2025-04-17",
+        "datePaiement": "2025-04-22",
+        "exercice": 2024,
+        "montant": 428.0
+      },
+      {
+        "dateExDividende": "2026-04-22",
+        "datePaiement": "2026-04-23",
+        "exercice": 2025,
+        "montant": 397.0
+      }
+    ],
+    "FTSC": [
+      {
+        "dateExDividende": "2024-09-26",
+        "datePaiement": "2024-09-30",
+        "exercice": 2023,
+        "montant": 143.1
+      },
+      {
+        "dateExDividende": "2025-09-26",
+        "datePaiement": "2025-09-30",
+        "exercice": 2024,
+        "montant": 1320.0
+      }
+    ],
+    "SDSC": [
+      {
+        "dateExDividende": "2024-12-10",
+        "datePaiement": "2024-12-12",
+        "exercice": 2023,
+        "montant": 92.0
+      },
+      {
+        "dateExDividende": "2025-08-27",
+        "datePaiement": "2025-08-29",
+        "exercice": 2024,
+        "montant": 92.0
+      }
+    ],
+    "SIBC": [
+      {
+        "dateExDividende": "2024-07-29",
+        "datePaiement": "2024-07-31",
+        "exercice": 2023,
+        "montant": 495.0
+      },
+      {
+        "dateExDividende": "2025-07-29",
+        "datePaiement": "2025-07-31",
+        "exercice": 2024,
+        "montant": 375.0
+      }
+    ],
+    "BOAN": [
+      {
+        "dateExDividende": "2025-05-30",
+        "datePaiement": "2025-06-03",
+        "exercice": 2024,
+        "montant": 209.25
+      }
+    ],
+    "CABC": [
+      {
+        "dateExDividende": "2025-05-28",
+        "datePaiement": "2025-06-02",
+        "exercice": 2024,
+        "montant": 128.1
+      }
+    ],
+    "BOAC": [
+      {
+        "dateExDividende": "2025-05-16",
+        "datePaiement": "2025-05-20",
+        "exercice": 2024,
+        "montant": 469.0
       }
     ]
   },
-  "non_reconnus": []
+  "non_reconnus": [
+    {
+      "dateExDividende": "2026-08-03",
+      "datePaiement": "2026-08-04",
+      "exercice": 2025,
+      "montant": 768.16,
+      "emetteur": "NSBC"
+    },
+    {
+      "dateExDividende": "2026-06-29",
+      "datePaiement": "2026-06-30",
+      "exercice": 2025,
+      "montant": 0.9,
+      "emetteur": "ECOBANK TG"
+    },
+    {
+      "dateExDividende": "2026-07-16",
+      "datePaiement": "2026-07-17",
+      "exercice": 2025,
+      "montant": 176.65,
+      "emetteur": "TOTAL SENEGAL S.A."
+    },
+    {
+      "dateExDividende": "2025-09-26",
+      "datePaiement": "2025-09-30",
+      "exercice": 2024,
+      "montant": 207.0,
+      "emetteur": "TRACTAFRIC CI"
+    },
+    {
+      "dateExDividende": "2025-07-09",
+      "datePaiement": "2025-07-11",
+      "exercice": 2024,
+      "montant": 222.4,
+      "emetteur": "TOTAL SENEGAL S.A."
+    },
+    {
+      "dateExDividende": "2024-09-20",
+      "datePaiement": "2024-09-24",
+      "exercice": 2023,
+      "montant": 182.7,
+      "emetteur": "TRACTAFRIC CI"
+    },
+    {
+      "dateExDividende": "2024-07-04",
+      "datePaiement": "2024-07-08",
+      "exercice": 2023,
+      "montant": 454.829,
+      "emetteur": "NSBC"
+    },
+    {
+      "dateExDividende": "2024-06-26",
+      "datePaiement": "2024-06-28",
+      "exercice": 2023,
+      "montant": 207.58,
+      "emetteur": "TOTAL SENEGAL S.A."
+    },
+    {
+      "dateExDividende": "2024-06-27",
+      "datePaiement": "2024-06-29",
+      "exercice": 2023,
+      "montant": 207.58,
+      "emetteur": "TOTAL SENEGAL S.A."
+    }
+  ]
 }
