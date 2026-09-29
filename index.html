@@ -425,7 +425,27 @@ function doSave(){
 
 /* ---------- calculations ---------- */
 function total1(){
-  return state.operations.reduce(function(s,o){return s+Number(o.montant||0)+Number(o.frais||0);},0);
+  // Les frais de versement (ex: frais de virement bancaire) ne sont jamais credites
+  // sur le compte : ils sont suivis a part (totalFraisOperations) mais n'entrent dans
+  // aucun calcul de total, de liquidite ou de performance.
+  return state.operations.reduce(function(s,o){return s+Number(o.montant||0);},0);
+}
+function totalFraisOperations(){
+  return state.operations.reduce(function(s,o){return s+Number(o.frais||0);},0);
+}
+function anneeFromFreeDate(txt){
+  var m = String(txt||'').match(/(19|20)\d{2}/);
+  return m ? m[0] : null;
+}
+function fraisOperationsParAnnee(){
+  var map = {};
+  state.operations.forEach(function(o){
+    if(!o.frais) return;
+    var annee = anneeFromFreeDate(o.date) || 'Sans date';
+    if(!map[annee]) map[annee] = {annee:annee, total:0};
+    map[annee].total += Number(o.frais||0);
+  });
+  return Object.keys(map).sort().map(function(k){ return map[k]; });
 }
 function total2(){
   return state.achats.reduce(function(s,a){return s+Number(a.cump||0)*Number(a.qte||0);},0);
@@ -691,16 +711,25 @@ function renderTopbar(){
 
 function renderOperations(){
   var rows = state.operations.map(function(o){
-    var tot = Number(o.montant||0)+Number(o.frais||0);
+    var tot = Number(o.montant||0);
     return '<div class="card" data-open="operations" data-id="'+o.id+'">'+
       '<div class="row1"><span class="titre">'+esc(o.libelle)+'</span>'+
       '<span class="montant pos tabular">'+fmt(tot)+'</span></div>'+
-      '<div class="meta">'+esc(o.date)+(o.frais?(' · frais '+fmt(o.frais)):'')+'</div></div>';
+      '<div class="meta">'+esc(o.date)+(o.frais?(' · frais de virement '+fmt(o.frais)):'')+'</div></div>';
   }).join('');
+  var parAnneeFrais = fraisOperationsParAnnee();
+  var totalFraisOps = totalFraisOperations();
   return '<div class="total-strip"><span class="label">Total des fonds versés</span>'+
     '<span class="value tabular" data-exact="'+esc(fmtFull(total1()))+'">'+fmt(total1())+'</span></div>'+
     '<div class="section-title">Historique des versements</div>'+
-    (rows || '<div class="empty">Aucun versement enregistré</div>');
+    (rows || '<div class="empty">Aucun versement enregistré</div>')+
+    (totalFraisOps ?
+      '<div class="section-title">Frais de virement bancaire</div>'+
+      '<div class="card"><div class="row1"><span class="titre">Total des frais payés</span>'+
+      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFraisOps))+'">'+fmt(totalFraisOps)+'</span></div></div>'+
+      vBarChartMagnitude(parAnneeFrais.map(function(y){ return {label:String(y.annee), value:y.total}; }), {color:'var(--brick)'})+
+      '<div class="helper">Ces frais servent uniquement à effectuer les virements — ils ne sont jamais crédités sur le compte. Ils sont suivis ici pour information seulement, et n\'entrent dans aucun total ni calcul de l\'application.</div>'
+      : '');
 }
 
 function renderPortefeuille(){
@@ -911,7 +940,7 @@ var LISTE_LABELS = {
   operations: 'Versement', achats: 'Achat', ventes: 'Vente', dividendes: 'Dividende', mouvements: 'Mouvement'
 };
 function describeItem(listName, item){
-  if(listName==='operations') return {titre: item.libelle, montant: Number(item.montant||0)+Number(item.frais||0)};
+  if(listName==='operations') return {titre: item.libelle, montant: Number(item.montant||0)};
   if(listName==='achats') return {titre: item.titre, montant: Number(item.cump||0)*Number(item.qte||0)};
   if(listName==='ventes') return {titre: item.titre, montant: Number(item.qte||0)*Number(item.prixVente||0)};
   if(listName==='dividendes') return {titre: item.titre+' · '+item.annee, montant: item.dividendeParAction+'/action'};
@@ -1369,7 +1398,7 @@ function buildWorkbook(ExcelJSLib, state){
   row = 3;
   titleRow(row, 'BILAN DES OPÉRATIONS', 6);
   row++;
-  headerRow(row, ['N°','Libellé','Date','Montant','Frais','Total']);
+  headerRow(row, ['N°','Libellé','Date','Montant net','Frais de virement','']);
   var startOps = row+1;
   state.operations.forEach(function(o, idx){
     var r = startOps + idx;
@@ -1378,22 +1407,28 @@ function buildWorkbook(ExcelJSLib, state){
     ws.getCell(r,3).value = o.date;
     inputCell(r,4,Number(o.montant)||0,CUR);
     inputCell(r,5,Number(o.frais)||0,CUR);
-    formulaCell(r,6,'D'+r+'+E'+r,CUR);
-    borderRow(r,6);
+    borderRow(r,5);
   });
   var lastOps = startOps + state.operations.length - 1;
   var total1Row = lastOps+1;
-  ws.mergeCells(total1Row,1,total1Row,5);
-  ws.getCell(total1Row,1).value = 'Total 1 – Total des fonds versés';
+  ws.mergeCells(total1Row,1,total1Row,3);
+  ws.getCell(total1Row,1).value = 'Total 1 – Total des fonds versés (net, hors frais de virement)';
   ws.getCell(total1Row,1).font = {bold:true};
   ws.getCell(total1Row,1).alignment = {horizontal:'right'};
-  for(var c=1;c<=6;c++){ totalFillCell(total1Row,c); ws.getCell(total1Row,c).border = thinBorder(); }
-  var t1 = formulaCell(total1Row,6,'SUM(F'+startOps+':F'+lastOps+')',CUR);
+  for(var c=1;c<=5;c++){ totalFillCell(total1Row,c); ws.getCell(total1Row,c).border = thinBorder(); }
+  var t1 = formulaCell(total1Row,4,'SUM(D'+startOps+':D'+lastOps+')',CUR);
   t1.font = {bold:true};
-  var TOTAL1 = 'F'+total1Row;
+  var TOTAL1 = 'D'+total1Row;
+
+  var totalFraisOpsRow = total1Row+1;
+  ws.mergeCells(totalFraisOpsRow,1,totalFraisOpsRow,3);
+  ws.getCell(totalFraisOpsRow,1).value = 'Dont total des frais de virement (information seule, non inclus ci-dessus)';
+  ws.getCell(totalFraisOpsRow,1).alignment = {horizontal:'right'};
+  formulaCell(totalFraisOpsRow,5,'SUM(E'+startOps+':E'+lastOps+')',CUR);
+  borderRow(totalFraisOpsRow,5);
 
   // ===== SECTION 2: PORTEFEUILLE =====
-  var sec2 = total1Row+2;
+  var sec2 = totalFraisOpsRow+2;
   titleRow(sec2, 'BILAN DU PORTEFEUILLE D\'ACTIONS', 7);
   var hrow2 = sec2+1;
   headerRow(hrow2, ['N°','Titre (Action)','CUMP','Nombre de titres','Montant investi','Date (libellé)','Date (valeur)']);
