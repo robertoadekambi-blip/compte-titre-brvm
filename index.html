@@ -405,8 +405,10 @@ function ecartAutoPourLigne(d){
   if(!entries) return null;
   var m = entries.find(function(e){ return anneeFromDate(e.dateExDividende, e.exercice)===Number(d.annee); });
   if(!m) return null;
-  if(Math.abs(Number(m.montant) - Number(d.dividendeParAction)) < 0.01) return null;
-  return m.montant;
+  var montantDiffere = Math.abs(Number(m.montant) - Number(d.dividendeParAction)) >= 0.01;
+  var dateDiffere = (d.dateDetachement||null) !== (m.dateExDividende||null);
+  if(!montantDiffere && !dateDiffere) return null;
+  return m;
 }
 
 /* ---------- persistance locale (aucune dépendance à Claude ou à internet) ---------- */
@@ -590,7 +592,11 @@ function fmtCompact(n){
   if(abs >= 1000) return sign+Math.round(abs/1000)+'k';
   return sign+Math.round(abs);
 }
-function fmt(n){ return fmtCompact(n) + ' F CFA'; }
+function fmt(n){
+  // En dessous d'un million, la valeur complete est plus lisible et ne surcharge
+  // pas l'affichage ; au-dela, le format compact (k/M) reste plus clair.
+  return (Math.abs(Number(n)||0) < 1000000) ? fmtFull(n) : (fmtCompact(n) + ' F CFA');
+}
 function fmtDate(iso){
   if(!iso) return '—';
   if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
@@ -766,12 +772,21 @@ function renderDividendes(){
     var yearCards = items.map(function(d){
       var auto = d.source==='auto';
       var ecart = auto ? null : ecartAutoPourLigne(d);
+      var ecartMsgParts = [];
+      if(ecart){
+        if(Math.abs(Number(ecart.montant) - Number(d.dividendeParAction)) >= 0.01){
+          ecartMsgParts.push('montant : '+fmtFull(ecart.montant));
+        }
+        if((d.dateDetachement||null) !== (ecart.dateExDividende||null)){
+          ecartMsgParts.push('date de détachement : '+fmtDate(ecart.dateExDividende));
+        }
+      }
       return '<div class="card'+(auto?' auto-suggest':'')+'" data-open="dividendes" data-id="'+d.id+'">'+
         '<div class="row1"><span class="titre">'+esc(d.titre)+(auto?' <span style="font-weight:400;opacity:.65;font-size:.8em;">(suggéré)</span>':'')+'</span>'+
         '<span class="montant pos tabular">'+fmt(d.total)+'</span></div>'+
         '<div class="meta">'+fmtDate(d.dateDetachement)+' · '+fmt(d.dividendeParAction)+'/action · '+
         d.nbTitresRetenu+' titres retenus'+(auto?' · appuie pour valider':'')+'</div>'+
-        (ecart!=null ? '<div class="meta" style="color:var(--bad);">La BRVM indique '+fmt(ecart)+'/action — ta saisie diffère, vérifie si besoin.</div>' : '')+
+        (ecartMsgParts.length ? '<div class="meta" style="color:var(--bad);">La BRVM indique — '+ecartMsgParts.join(' · ')+' — appuie pour corriger.</div>' : '')+
         '</div>';
     }).join('');
     return '<div class="section-title">'+y+'</div>'+yearCards;
@@ -1053,15 +1068,22 @@ var FORMS = {
   },
   dividendes: function(item){
     item = item || {titre:'',annee:new Date().getFullYear(),dateDetachement:'',dividendeParAction:''};
+    var ecart = item.id ? ecartAutoPourLigne(item) : null;
+    var ecartLine = ecart
+      ? ('<div class="helper" style="margin-bottom:10px;">La BRVM indique : <strong>'+fmtFull(ecart.montant)+'</strong>/action, détaché le <strong>'+esc(fmtDate(ecart.dateExDividende))+'</strong>. '+
+         '<button type="button" id="btn-use-auto-div" class="inline-add" style="margin-left:6px;">Corriger avec ces valeurs</button></div>')
+      : '';
     return {
       title: item.id ? 'Modifier le dividende' : 'Nouveau dividende',
       body:
+        ecartLine+
         '<div class="field"><label>Titre (action)</label><input id="f-titre" list="titres-list" value="'+esc(item.titre)+'" placeholder="ex: CBI BF"></div>'+titreDatalist()+
         '<div class="field-row">'+
         '<div class="field"><label>Année</label><input id="f-annee" type="number" step="1" value="'+item.annee+'"></div>'+
         '<div class="field"><label>Dividende / action</label><input id="f-div" type="number" step="0.01" value="'+item.dividendeParAction+'"></div>'+
         '</div>'+
-        '<div class="field"><label>Date de détachement</label><input id="f-dd" type="date" value="'+esc(item.dateDetachement||'')+'"></div>',
+        '<div class="field"><label>Date de détachement</label><input id="f-dd" type="date" value="'+esc(item.dateDetachement||'')+'"></div>'+
+        (ecart ? '<div class="helper">L\'année reste calculée sur la date de détachement : si tu la corriges, verifie que l\'année ci-dessus lui correspond toujours.</div>' : ''),
       save: function(){
         return {
           titre: canonicalTitre(document.getElementById('f-titre').value),
@@ -1177,6 +1199,17 @@ function openForm(kind, id){
     useAutoBtn.onclick = function(){
       delete state.coursActuels[id];
       closeSheet(); render(); scheduleSave();
+    };
+  }
+  var useAutoDivBtn = document.getElementById('btn-use-auto-div');
+  if(useAutoDivBtn && kind === 'dividendes'){
+    useAutoDivBtn.onclick = function(){
+      var ecart = ecartAutoPourLigne(item);
+      if(!ecart) return;
+      document.getElementById('f-div').value = ecart.montant;
+      document.getElementById('f-dd').value = ecart.dateExDividende || '';
+      var annee = anneeFromDate(ecart.dateExDividende, ecart.exercice);
+      if(annee) document.getElementById('f-annee').value = annee;
     };
   }
   var delBtn = document.getElementById('btn-delete');
