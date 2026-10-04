@@ -1880,6 +1880,42 @@ function buildWorkbook(ExcelJSLib, state){
       formulaCell(divMovementRows[y],5,"Dividendes!B"+rr,CUR);
     })();
   });
+  var recLastRow = recStart + years.length - 1;
+
+  // ---- Total par titre (depuis le debut) : miroir de l'onglet Dividendes de l'app ----
+  var titreTitleRow = recLastRow + 2;
+  ws2.mergeCells(titreTitleRow,1,titreTitleRow,9);
+  ws2.getCell(titreTitleRow,1).value = 'Total par titre (depuis le début)';
+  ws2.getCell(titreTitleRow,1).font = {bold:true, size:10, color:{argb:NAVY}};
+  ws2.getCell(titreTitleRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:SUBHEAD}};
+  ws2.getCell(titreTitleRow,1).alignment = {horizontal:'center'};
+  var titreHrow = titreTitleRow+1;
+  ['Titre','Total dividendes'].forEach(function(h,i){
+    var c = ws2.getCell(titreHrow, i+1);
+    c.value = h; c.font = {bold:true,size:11,color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};
+    c.alignment = {horizontal:'center', wrapText:true}; c.border = thinBorder();
+  });
+  var titresUniquesDiv = [];
+  divList.forEach(function(d){ if(titresUniquesDiv.indexOf(d.titre)===-1) titresUniquesDiv.push(d.titre); });
+  var titreStart = titreHrow+1;
+  titresUniquesDiv.forEach(function(titre, idx){
+    var rr = titreStart+idx;
+    ws2.getCell(rr,1).value = titre;
+    formulaCell(rr,2,'SUMIF(B'+startD+':B'+lastD+',A'+rr+',G'+startD+':G'+lastD+')',CUR,ws2);
+    ws2.getCell(rr,1).border = thinBorder();
+    ws2.getCell(rr,2).border = thinBorder();
+  });
+  var titreLast = titreStart + titresUniquesDiv.length - 1;
+  var titreTotalRow = titreLast+1;
+  ws2.getCell(titreTotalRow,1).value = 'Total';
+  ws2.getCell(titreTotalRow,1).font = {bold:true};
+  var totDivTitreCell = formulaCell(titreTotalRow,2,'SUM(B'+titreStart+':B'+titreLast+')',CUR,ws2);
+  totDivTitreCell.font = {bold:true};
+  ws2.getCell(titreTotalRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  ws2.getCell(titreTotalRow,2).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  ws2.getCell(titreTotalRow,1).border = thinBorder();
+  ws2.getCell(titreTotalRow,2).border = thinBorder();
 
   ws2.views = [{state:'frozen', xSplit:3, ySplit:3}];
 
@@ -1997,42 +2033,4 @@ document.getElementById('app').addEventListener('click', function(e){
   if(purgeBtn){
     if(!purgeBtn.classList.contains('confirming')){
       purgeBtn.classList.add('confirming');
-      purgeBtn.textContent = 'Confirmer ?';
-      return;
-    }
-    var pid = purgeBtn.dataset.purge;
-    state.corbeille = state.corbeille.filter(function(x){return x.id!==pid;});
-    render(); scheduleSave();
-    return;
-  }
-  var card = e.target.closest('[data-open]');
-  if(!card) return;
-  openForm(card.dataset.open, card.dataset.id);
-});
-
-var FAB_MAP = {operations:'operations', portefeuille:'achats', dividendes:'dividendes', liquidite:'mouvements'};
-document.getElementById('fab').addEventListener('click', function(){
-  var kind = FAB_MAP[currentTab];
-  if(!kind) return;
-  openForm(kind, null);
-});
-
-/* ---------- boot ---------- */
-if(!state){
-  state = {operations:[],achats:[],ventes:[],dividendes:[],mouvements:[],corbeille:[],coursActuels:{},liquiditeReelle:{montant:0,date:''}};
-}
-if(!state.corbeille) state.corbeille = [];
-if(!state.ventes) state.ventes = [];
-if(!state.coursActuels) state.coursActuels = {};
-loadAutoCours();
-loadAutoDividendes();
-render();
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./sw.js').catch(function(){ /* pas grave */ });
-  });
-}
-
-})();
-</script></body></html>
+      purgeBtn.textContent = 'Confirmer 
