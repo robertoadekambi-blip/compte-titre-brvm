@@ -472,7 +472,7 @@ function collapsibleRows(key, cardsArray, opts){
   var labelCount = (opts.count!=null) ? opts.count : sliceAt;
   var expanded = !!expandedSections[key];
   var toggleBtn = '<button type="button" class="toggle-older" data-toggle-section="'+esc(key)+'">'+
-    (expanded ? '▲ Masquer les '+labelCount+' plus anciens' : '▼ Afficher les '+labelCount+' plus anciens')+
+(expanded ? '▲ Masquer les '+labelCount+' plus anciens' : '▼ Afficher les '+labelCount+' plus anciens')+
     '</button>';
   return expanded ? (toggleBtn + cardsArray.join('')) : (toggleBtn + cardsArray.slice(sliceAt).join(''));
 }
@@ -587,7 +587,7 @@ function autoDividendesSuggeres(){
   knownTitres().forEach(function(titre){
     var code = tickerOf(titre);
     var entries = code ? (autoDividendes.tickers||{})[code] : null;
-    (entries||[]).forEach(function(entry){
+    (Array.isArray(entries) ? entries : []).forEach(function(entry){
       var annee = anneeFromDate(entry.dateExDividende, entry.exercice);
       var dejaManuel = state.dividendes.some(function(d){ return d.titre===titre && Number(d.annee)===annee; });
       if(dejaManuel) return;
@@ -773,6 +773,14 @@ function totalsByTitre(){
   enriched.forEach(function(d){
     if(!map[d.titre]) map[d.titre] = {titre:d.titre, total:0};
     map[d.titre].total += d.total;
+  });
+  var posByTitre = {};
+  positionConsolidee().forEach(function(p){ posByTitre[p.titre] = p.qte; });
+  Object.keys(map).forEach(function(titre){
+    var qteDetenue = posByTitre[titre] || 0;
+    var capitalActuel = qteDetenue * cumpOf(titre);
+    map[titre].capitalActuel = capitalActuel;
+    map[titre].rendementReel = capitalActuel > 0 ? (map[titre].total / capitalActuel) : null;
   });
   return Object.values(map).sort(function(a,b){return b.total-a.total;});
 }
@@ -976,7 +984,7 @@ function renderPortefeuille(){
     (achatsRows || '<div class="empty">Aucun achat enregistré</div>')+
     '<div class="section-title-row"><span class="section-title" style="margin:0">Ventes</span>'+
     '<button class="inline-add" data-add="ventes">+ vente</button></div>'+
-    (ventesRows || '<div class="empty">Aucune vente enregistrée</div>')+
+(ventesRows || '<div class="empty">Aucune vente enregistrée</div>')+
     '<div class="section-title-row"><span class="section-title" style="margin:0">Position consolidée</span>'+
     (Object.keys(state.coursActuels).length ? '<button class="inline-add" data-autoall="1">Tout en auto</button>' : '')+'</div>'+
     (posRows || '<div class="empty">Aucune position</div>')+
@@ -1062,10 +1070,11 @@ function renderDividendes(){
   }).join('');
   var byTitre = totalsByTitre();
   var titreRows = byTitre.map(function(t){
-    return '<tr><td>'+esc(t.titre)+'</td><td class="num tabular">'+fmt(t.total)+'</td></tr>';
+    return '<tr><td>'+esc(t.titre)+'</td><td class="num tabular">'+fmt(t.total)+'</td>'+
+      '<td class="num tabular">'+(t.rendementReel!=null ? fmtPct(t.rendementReel) : '—')+'</td></tr>';
   }).join('');
   var titreTotalRow = '<tr style="font-weight:600;border-top:1.5px solid var(--line);">'+
-    '<td>Total</td><td class="num tabular">'+fmt(totalDividendesAll())+'</td></tr>';
+    '<td>Total</td><td class="num tabular">'+fmt(totalDividendesAll())+'</td><td></td></tr>';
   return '<div class="total-strip"><span class="label">Total dividendes reçus</span>'+
     '<span class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus sur les titres que tu détenais à chaque date de détachement.">'+fmt(totalDividendesAll())+'</span></div>'+
     (nbSuggestions ? '<div class="helper" style="background:var(--gold-soft);border-radius:9px;padding:10px 12px;margin-bottom:6px;">'+
@@ -1080,8 +1089,10 @@ function renderDividendes(){
     yearRows+'</table></div>'+
     '<div class="helper">La "Rémunération mensuelle" est le total des dividendes de l\'année divisé par 12 — une moyenne indicative, pas un versement réel mensuel.</div>'+
     '<div class="section-title">Total par titre (depuis le début)</div>'+
-    '<div class="card"><table class="mini"><tr><th>Titre</th><th style="text-align:right">Total dividendes</th></tr>'+
+    '<div class="card"><table class="mini"><tr><th>Titre</th><th style="text-align:right">Total dividendes</th>'+
+    '<th style="text-align:right">Rendement réel</th></tr>'+
     titreRows+titreTotalRow+'</table></div>'+
+    '<div class="helper">Le "Rendement réel" rapporte les dividendes reçus depuis le début à ton prix d\'achat (CUMP) sur ce que tu détiens encore — pas au cours actuel. Affiché uniquement si tu détiens encore le titre.</div>'+
     (byTitre.length ?
       vBarChartMagnitude(byTitre.map(function(t){ return {label:t.titre, value:t.total}; })) : '')+
     (byYear.length ?
@@ -1307,7 +1318,7 @@ var FORMS = {
         '<div class="helper">Le CUMP du titre est recalculé automatiquement (moyenne pondérée de tous tes achats). La date sert à savoir quels dividendes tu as le droit de toucher.</div>',
       validate: function(){
         if(!document.getElementById('f-titre').value.trim()) return 'Indique le titre.';
-        if(!(parseFloat(document.getElementById('f-qte').value) > 0)) return 'Indique un nombre de titres supérieur à 0.';
+if(!(parseFloat(document.getElementById('f-qte').value) > 0)) return 'Indique un nombre de titres supérieur à 0.';
         if(!(parseFloat(document.getElementById('f-cump').value) > 0)) return 'Indique le prix d\'achat.';
         if(!document.getElementById('f-date').value) return 'La date d\'achat est obligatoire.';
         return '';
@@ -1792,7 +1803,7 @@ function buildWorkbook(ExcelJSLib, state){
       inputCell(r,3,Number(v.qte)||0,'#,##0');
       inputCell(r,4,Number(v.prixVente)||0,CUR);
       formulaCell(r,5,'C'+r+'*D'+r,CUR);
-      formulaCell(r,6,'(D'+r+'-'+cumpAtF(r,'G'+r)+')*C'+r,CUR);
+formulaCell(r,6,'(D'+r+'-'+cumpAtF(r,'G'+r)+')*C'+r,CUR);
       inputCell(r,7, v.date ? new Date(v.date) : null, DATEFMT);
     } else {
       ws.getCell(r,3).numFmt = '#,##0';
@@ -2082,7 +2093,7 @@ function buildWorkbook(ExcelJSLib, state){
   ws2.getCell(titreTitleRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:SUBHEAD}};
   ws2.getCell(titreTitleRow,1).alignment = {horizontal:'center'};
   var titreHrow = titreTitleRow+1;
-  ['Titre','Total dividendes'].forEach(function(h,i){
+  ['Titre','Total dividendes','Rendement réel (sur CUMP actuel)'].forEach(function(h,i){
     var c = ws2.getCell(titreHrow, i+1);
     c.value = h; c.font = {bold:true,size:11,color:{argb:'FFFFFFFF'}};
     c.fill = {type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};
@@ -2095,8 +2106,12 @@ function buildWorkbook(ExcelJSLib, state){
     var rr = titreStart+idx;
     ws2.getCell(rr,1).value = titre;
     formulaCell(rr,2,'SUMIF(B'+startD+':B'+lastD+',A'+rr+',G'+startD+':G'+lastD+')',CUR,ws2);
+    var qteActuelleF = 'SUMIF(Bilan!'+ACH_TITRE+',A'+rr+',Bilan!'+ACH_QTE+')-SUMIF(Bilan!'+VTE_TITRE+',A'+rr+',Bilan!'+VTE_QTE+')';
+    var cumpActuelF = 'IFERROR(SUMIF(Bilan!'+ACH_TITRE+',A'+rr+',Bilan!'+ACH_MONTANT+')/SUMIF(Bilan!'+ACH_TITRE+',A'+rr+',Bilan!'+ACH_QTE+'),0)';
+    formulaCell(rr,3,'IF(('+qteActuelleF+')*('+cumpActuelF+')=0,"",B'+rr+'/(('+qteActuelleF+')*('+cumpActuelF+')))',PCT,ws2);
     ws2.getCell(rr,1).border = thinBorder();
     ws2.getCell(rr,2).border = thinBorder();
+    ws2.getCell(rr,3).border = thinBorder();
   });
   var titreLast = titreStart + titresUniquesDiv.length - 1;
   var titreTotalRow = titreLast+1;
@@ -2106,7 +2121,9 @@ function buildWorkbook(ExcelJSLib, state){
   totDivTitreCell.font = {bold:true};
   ws2.getCell(titreTotalRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
   ws2.getCell(titreTotalRow,2).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  ws2.getCell(titreTotalRow,3).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
   ws2.getCell(titreTotalRow,1).border = thinBorder();
+  ws2.getCell(titreTotalRow,3).border = thinBorder();
   ws2.getCell(titreTotalRow,2).border = thinBorder();
 
   ws2.views = [{state:'frozen', xSplit:3, ySplit:3}];
