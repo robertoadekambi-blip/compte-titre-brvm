@@ -314,7 +314,18 @@ function coursEffectifs(){
   });
   return m;
 }
-function byDate(a,b){ return String(a.date||'').localeCompare(String(b.date||'')); }
+function sortableDate(d){
+  // Rend une date triable meme si elle a ete enregistree a l'ancien format libre
+  // (ex: "04/09/2026" au lieu de "2026-09-04") : sans cette normalisation, un tri
+  // texte brut classe "04/10/2026" avant "28/09/2026", ce qui est faux.
+  var s = String(d||'');
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  var mDMY = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(mDMY) return mDMY[3]+'-'+mDMY[2].padStart(2,'0')+'-'+mDMY[1].padStart(2,'0');
+  var iso = dateToISO(s);
+  return iso || s;
+}
+function byDate(a,b){ return sortableDate(a.date).localeCompare(sortableDate(b.date)); }
 function todayISO(){
   var d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -344,16 +355,35 @@ function titreDatalist(){
   return '<datalist id="titres-list">'+opts.join('')+'</datalist>';
 }
 
-/* ---------- cours automatiques (recuperes via GitHub Actions, fichier cours-auto.json a la racine) ---------- */
+/* ---------- cours automatiques (recuperes via GitHub Actions, fichier cours-auto.json a la racine) ----------
+   Mis en cache localement (localStorage) a chaque recuperation reussie, pour que l'app
+   affiche toujours le dernier cours connu meme sans connexion internet. ---------- */
+var AUTO_CACHE_KEY = 'brvm-auto-cours-cache-v1';
 var autoCours = {};
 var autoCoursUpdatedAt = null;
 var autoTickers = {};
+(function loadAutoCoursFromCache(){
+  try{
+    var cached = JSON.parse(localStorage.getItem(AUTO_CACHE_KEY) || 'null');
+    if(cached){
+      autoCours = cached.cours || {};
+      autoTickers = cached.tickers || {};
+      autoCoursUpdatedAt = cached.updatedAt || null;
+    }
+  }catch(e){ /* pas de cache lisible : pas grave, on part de zero */ }
+})();
+function saveAutoCoursToCache(){
+  try{
+    localStorage.setItem(AUTO_CACHE_KEY, JSON.stringify({cours:autoCours, tickers:autoTickers, updatedAt:autoCoursUpdatedAt}));
+  }catch(e){ /* stockage plein ou indisponible : pas grave, la session reste utilisable */ }
+}
 function loadAutoCours(){
   var RAW = 'https://raw.githubusercontent.com/robertoadekambi-blip/compte-titre-brvm/main/cours-auto.json';
   function apply(data){
     autoCours = (data && data.cours) || {};
     autoTickers = (data && data.tickers) || {};
     autoCoursUpdatedAt = (data && data.updatedAt) || null;
+    saveAutoCoursToCache();
     render();
   }
   function tryFetch(url){
@@ -365,14 +395,22 @@ function loadAutoCours(){
   try{
     tryFetch(RAW).catch(function(){ return tryFetch('./cours-auto.json'); })
       .then(apply)
-      .catch(function(){ /* pas de cours auto disponibles : l'app fonctionne comme avant */ });
-  }catch(e){ /* fetch indisponible : pas grave */ }
+      .catch(function(){ /* pas de reseau : le cache local charge au demarrage reste affiche */ });
+  }catch(e){ /* fetch indisponible : le cache local reste affiche */ }
 }
+var DIV_CACHE_KEY = 'brvm-auto-dividendes-cache-v1';
 var autoDividendes = {tickers:{}, autres:{}};
+(function loadAutoDividendesFromCache(){
+  try{
+    var cached = JSON.parse(localStorage.getItem(DIV_CACHE_KEY) || 'null');
+    if(cached) autoDividendes = {tickers:cached.tickers||{}, autres:cached.autres||{}};
+  }catch(e){ /* pas de cache lisible : pas grave */ }
+})();
 function loadAutoDividendes(){
   var RAW = 'https://raw.githubusercontent.com/robertoadekambi-blip/compte-titre-brvm/main/dividendes-auto.json';
   function apply(data){
     autoDividendes = {tickers:(data && data.tickers) || {}, autres:(data && data.autres) || {}};
+    try{ localStorage.setItem(DIV_CACHE_KEY, JSON.stringify(autoDividendes)); }catch(e){}
     render();
   }
   function tryFetch(url){
