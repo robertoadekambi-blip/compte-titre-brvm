@@ -119,6 +119,11 @@ main{padding:14px 14px 96px;max-width:640px;margin:0 auto;}
 }
 .section-title-row .section-title{margin:0;}
 .inline-add.confirming{background:var(--gold);color:var(--navy);}
+.toggle-older{
+  display:block;width:100%;background:none;border:1px dashed var(--line);color:var(--muted);
+  border-radius:var(--radius);padding:9px;font-size:.76rem;font-family:inherit;
+  cursor:pointer;margin-bottom:10px;
+}
 .inline-add{
   background:none;border:1px solid var(--gold);color:var(--gold);
   border-radius:999px;padding:4px 12px;font-size:.72rem;font-weight:600;
@@ -326,6 +331,21 @@ function sortableDate(d){
   return iso || s;
 }
 function byDate(a,b){ return sortableDate(a.date).localeCompare(sortableDate(b.date)); }
+
+/* ---------- listes repliables : n'affiche que les plus recentes, le reste derriere un bouton ---------- */
+var expandedSections = {};
+function collapsibleRows(key, cardsArray, opts){
+  opts = opts || {};
+  var n = (opts.visible!=null) ? opts.visible : 2;
+  if(cardsArray.length <= n) return cardsArray.join('');
+  var sliceAt = cardsArray.length - n;
+  var labelCount = (opts.count!=null) ? opts.count : sliceAt;
+  var expanded = !!expandedSections[key];
+  var toggleBtn = '<button type="button" class="toggle-older" data-toggle-section="'+esc(key)+'">'+
+    (expanded ? '▲ Masquer les '+labelCount+' plus anciens' : '▼ Afficher les '+labelCount+' plus anciens')+
+    '</button>';
+  return expanded ? (toggleBtn + cardsArray.join('')) : (toggleBtn + cardsArray.slice(sliceAt).join(''));
+}
 function todayISO(){
   var d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -765,13 +785,13 @@ function renderTopbar(){
 }
 
 function renderOperations(){
-  var rows = state.operations.slice().sort(byDate).map(function(o){
+  var rows = collapsibleRows('operations', state.operations.slice().sort(byDate).map(function(o){
     var tot = Number(o.montant||0);
     return '<div class="card" data-open="operations" data-id="'+o.id+'">'+
       '<div class="row1"><span class="titre">'+esc(o.libelle)+'</span>'+
       '<span class="montant pos tabular">'+fmt(tot)+'</span></div>'+
       '<div class="meta">'+esc(fmtDate(o.date))+(o.frais?(' · frais de virement '+fmt(o.frais)):'')+'</div></div>';
-  }).join('');
+  }));
   var parAnneeFrais = fraisOperationsParAnnee();
   var totalFraisOps = totalFraisOperations();
   return '<div class="total-strip"><span class="label">Total des fonds versés</span>'+
@@ -788,20 +808,20 @@ function renderOperations(){
 }
 
 function renderPortefeuille(){
-  var achatsRows = state.achats.slice().sort(byDate).map(function(a){
+  var achatsRows = collapsibleRows('achats', state.achats.slice().sort(byDate).map(function(a){
     return '<div class="card" data-open="achats" data-id="'+a.id+'">'+
       '<div class="row1"><span class="titre">'+esc(a.titre)+'</span>'+
       '<span class="montant tabular">'+fmt(a.cump*a.qte)+'</span></div>'+
       '<div class="meta">'+a.qte+' titres · CUMP '+fmt(a.cump)+' · '+fmtDate(a.date)+'</div></div>';
-  }).join('');
-  var ventesRows = state.ventes.slice().sort(byDate).map(function(v){
+  }));
+  var ventesRows = collapsibleRows('ventes', state.ventes.slice().sort(byDate).map(function(v){
     var pv = (Number(v.prixVente||0)-cumpAt(v.titre, v.date))*Number(v.qte||0);
     return '<div class="card" data-open="ventes" data-id="'+v.id+'">'+
       '<div class="row1"><span class="titre">'+esc(v.titre)+'</span>'+
       '<span class="montant tabular">'+fmt(v.qte*v.prixVente)+'</span></div>'+
       '<div class="meta">'+v.qte+' titres · '+fmt(v.prixVente)+'/titre · '+fmtDate(v.date)+
       ' · '+(pv>=0?'plus-value ':'moins-value ')+fmt(Math.abs(pv))+'</div></div>';
-  }).join('');
+  }));
   var pos = positionConsolidee();
   var posRows = pos.map(function(p){
     var info = coursInfoOf(p.titre);
@@ -845,38 +865,62 @@ function renderPortefeuille(){
       : '');
 }
 
+function dividendCardHtml(d){
+  var auto = d.source==='auto';
+  var ecart = auto ? null : ecartAutoPourLigne(d);
+  var ecartMsgParts = [];
+  if(ecart){
+    if(Math.abs(Number(ecart.montant) - Number(d.dividendeParAction)) >= 0.01){
+      ecartMsgParts.push('montant : '+fmtFull(ecart.montant));
+    }
+    if((d.dateDetachement||null) !== (ecart.dateExDividende||null)){
+      ecartMsgParts.push('date de détachement : '+fmtDate(ecart.dateExDividende));
+    }
+  }
+  return '<div class="card'+(auto?' auto-suggest':'')+'" data-open="dividendes" data-id="'+d.id+'">'+
+    '<div class="row1"><span class="titre">'+esc(d.titre)+(auto?' <span style="font-weight:400;opacity:.65;font-size:.8em;">(suggéré)</span>':'')+'</span>'+
+    '<span class="montant pos tabular">'+fmt(d.total)+'</span></div>'+
+    '<div class="meta">'+fmtDate(d.dateDetachement)+' · '+fmt(d.dividendeParAction)+'/action · '+
+    d.nbTitresRetenu+' titres retenus'+(auto?' · appuie pour valider':'')+'</div>'+
+    (ecartMsgParts.length ? '<div class="meta" style="color:var(--bad);">La BRVM indique — '+ecartMsgParts.join(' · ')+' — appuie pour corriger.</div>' : '')+
+    '</div>';
+}
 function renderDividendes(){
   var enriched = enrichDividendes();
   var suggestions = enrichSuggestions();
   var pourAffichage = enriched.concat(suggestions);
   var years = Array.from(new Set(pourAffichage.map(function(d){return d.annee;}))).sort(function(a,b){return a-b;});
   var nbSuggestions = suggestions.length;
-  var rows = years.map(function(y){
-    var items = pourAffichage.filter(function(d){return d.annee===y;}).sort(function(a,b){
+  var anneeCourante = new Date().getFullYear();
+  var anneesPassees = years.filter(function(y){ return y < anneeCourante; });
+  var anneesCourantes = years.filter(function(y){ return y >= anneeCourante; });
+  var itemsOf = function(y){
+    return pourAffichage.filter(function(d){return d.annee===y;}).sort(function(a,b){
       return String(a.dateDetachement||'').localeCompare(String(b.dateDetachement||''));
     });
-    var yearCards = items.map(function(d){
-      var auto = d.source==='auto';
-      var ecart = auto ? null : ecartAutoPourLigne(d);
-      var ecartMsgParts = [];
-      if(ecart){
-        if(Math.abs(Number(ecart.montant) - Number(d.dividendeParAction)) >= 0.01){
-          ecartMsgParts.push('montant : '+fmtFull(ecart.montant));
-        }
-        if((d.dateDetachement||null) !== (ecart.dateExDividende||null)){
-          ecartMsgParts.push('date de détachement : '+fmtDate(ecart.dateExDividende));
-        }
-      }
-      return '<div class="card'+(auto?' auto-suggest':'')+'" data-open="dividendes" data-id="'+d.id+'">'+
-        '<div class="row1"><span class="titre">'+esc(d.titre)+(auto?' <span style="font-weight:400;opacity:.65;font-size:.8em;">(suggéré)</span>':'')+'</span>'+
-        '<span class="montant pos tabular">'+fmt(d.total)+'</span></div>'+
-        '<div class="meta">'+fmtDate(d.dateDetachement)+' · '+fmt(d.dividendeParAction)+'/action · '+
-        d.nbTitresRetenu+' titres retenus'+(auto?' · appuie pour valider':'')+'</div>'+
-        (ecartMsgParts.length ? '<div class="meta" style="color:var(--bad);">La BRVM indique — '+ecartMsgParts.join(' · ')+' — appuie pour corriger.</div>' : '')+
-        '</div>';
-    }).join('');
-    return '<div class="section-title">'+y+'</div>'+yearCards;
-  }).join('');
+  };
+  // Annees passees : toutes regroupees derriere une seule bascule (pas de detail par annee affiche par defaut)
+  var passeesCards = [];
+  var passeesCount = 0;
+  anneesPassees.forEach(function(y){
+    var itemsY = itemsOf(y);
+    if(!itemsY.length) return;
+    passeesCards.push('<div class="vchart-year-title">'+y+'</div>');
+    itemsY.forEach(function(d){ passeesCards.push(dividendCardHtml(d)); passeesCount++; });
+  });
+  var passeesHtml = '';
+  if(passeesCards.length){
+    passeesHtml = collapsibleRows('dividendes-annees-passees', passeesCards, {visible:0, count:passeesCount});
+  }
+  // Annee(s) en cours : seules les 2 plus recentes sont visibles par defaut
+  var courantesCards = [];
+  anneesCourantes.forEach(function(y){
+    itemsOf(y).forEach(function(d){ courantesCards.push(dividendCardHtml(d)); });
+  });
+  var courantesHtml = courantesCards.length
+    ? collapsibleRows('dividendes-annee-courante', courantesCards, {visible:2})
+    : '';
+  var rows = passeesHtml + courantesHtml;
   var byYear = totalsByYear();
   var yearRows = byYear.map(function(y){
     return '<tr><td>'+y.annee+'</td><td class="num tabular">'+fmt(y.total)+'</td>'+
@@ -918,14 +962,14 @@ function renderDividendes(){
 }
 
 function renderLiquidite(){
-  var rows = state.mouvements.slice().sort(byDate).map(function(m){
+  var rows = collapsibleRows('mouvements', state.mouvements.slice().sort(byDate).map(function(m){
     var neg = Number(m.montant) < 0;
     return '<div class="card" data-open="mouvements" data-id="'+m.id+'">'+
       '<div class="row1"><span class="titre">'+esc(m.libelle||m.type)+'</span>'+
       '<span class="montant '+(neg?'neg':'pos')+' tabular">'+fmt(m.montant)+'</span></div>'+
       '<div class="meta">'+esc(m.type)+(m.titre?(' · '+esc(m.titre)):'')+
       ' · '+esc(fmtDate(m.date))+'</div></div>';
-  }).join('');
+  }));
   var lr = state.liquiditeReelle;
   var parAnnee = fraisAutresParAnnee();
   var parAnneeRows = parAnnee.map(function(y){
@@ -1919,6 +1963,13 @@ document.getElementById('app').addEventListener('click', function(e){
     }
     state.coursActuels = {};
     render(); scheduleSave();
+    return;
+  }
+  var toggleSec = e.target.closest('[data-toggle-section]');
+  if(toggleSec){
+    var secKey = toggleSec.dataset.toggleSection;
+    expandedSections[secKey] = !expandedSections[secKey];
+    render();
     return;
   }
   var exactEl = e.target.closest('[data-exact]');
