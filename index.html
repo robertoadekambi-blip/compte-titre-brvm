@@ -1,0 +1,2304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Compte Titre BRVM (hors ligne)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#10233F;
+  --navy-2:#173357;
+  --gold:#B8902E;
+  --gold-soft:#EADFC4;
+  --brick:#9C4A3A;
+  --paper:#F6F4EF;
+  --card:#FFFFFF;
+  --ink:#1B2430;
+  --muted:#6B7280;
+  --line:#E4E0D6;
+  --good:#2F6D4C;
+  --bad:#9C4A3A;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --navy:#0C1A2E;
+    --navy-2:#132B4B;
+    --gold:#D8B85A;
+    --gold-soft:#3A3320;
+    --brick:#C97361;
+    --paper:#11151C;
+    --card:#181D26;
+    --ink:#EDEBE6;
+    --muted:#9AA3AE;
+    --line:#2A3038;
+    --good:#5FAE83;
+    --bad:#D8836F;
+  }
+}
+:root[data-theme="dark"]{
+  --navy:#0C1A2E;
+  --navy-2:#132B4B;
+  --gold:#D8B85A;
+  --gold-soft:#3A3320;
+  --brick:#C97361;
+  --paper:#11151C;
+  --card:#181D26;
+  --ink:#EDEBE6;
+  --muted:#9AA3AE;
+  --line:#2A3038;
+  --good:#5FAE83;
+  --bad:#D8836F;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:'Source Serif 4',Georgia,serif;}
+.tabular{font-variant-numeric:tabular-nums;}
+#topbar{
+  background:var(--navy);
+  color:#fff;
+  padding:calc(14px + env(safe-area-inset-top,0px)) 18px 14px;
+  position:sticky; top:0; z-index:10;
+}
+#topbar h1{margin:0;font-size:1.15rem;font-weight:600;letter-spacing:.2px;}
+#topbar .sub{font-size:.72rem;color:var(--gold-soft);opacity:.85;margin-top:2px;}
+#ecart-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:8px;padding:4px 10px;border-radius:999px;
+  font-size:.72rem;font-weight:600;
+}
+#ecart-pill.ok{background:rgba(95,174,131,.18);color:var(--good);}
+#ecart-pill.warn{background:rgba(216,131,111,.18);color:var(--bad);}
+#ecart-pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+main{padding:14px 14px 96px;max-width:640px;margin:0 auto;}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin-bottom:10px;
+}
+.card .row1{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.card[data-open]{cursor:pointer;position:relative;padding-right:34px;transition:background .12s;}
+.card[data-open]:active{background:var(--gold-soft);}
+.card[data-open]::after{
+  content:'›';position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:1.4rem;color:var(--muted);font-family:'Source Serif 4',serif;
+}
+.card.readonly{opacity:.9;}
+.card.auto-suggest{border-style:dashed;border-color:var(--gold);}
+.card.readonly .row1 .titre::after{
+  content:'🔒';font-size:.7rem;margin-left:6px;opacity:.6;
+}
+.card .titre{font-weight:600;font-size:.95rem;}
+.card .meta{font-size:.76rem;color:var(--muted);margin-top:3px;}
+.card .montant{font-weight:600;font-size:1rem;white-space:nowrap;}
+.card .montant.neg{color:var(--brick);}
+.card .montant.pos{color:var(--good);}
+.section-title{
+  font-size:.72rem;text-transform:none;letter-spacing:.2px;
+  color:var(--muted);margin:18px 4px 8px;font-weight:600;
+}
+.section-title:first-child{margin-top:4px;}
+.section-title-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin:18px 2px 8px;
+}
+.section-title-row .section-title{margin:0;}
+.inline-add.confirming{background:var(--gold);color:var(--navy);}
+.toggle-older{
+  display:block;width:100%;background:none;border:1px dashed var(--line);color:var(--muted);
+  border-radius:var(--radius);padding:9px;font-size:.76rem;font-family:inherit;
+  cursor:pointer;margin-bottom:10px;
+}
+.inline-add{
+  background:none;border:1px solid var(--gold);color:var(--gold);
+  border-radius:999px;padding:4px 12px;font-size:.72rem;font-weight:600;
+  font-family:inherit;cursor:pointer;
+}
+.total-strip{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--navy);color:#fff;border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:14px;
+}
+.total-strip .label{font-size:.78rem;color:var(--gold-soft);}
+.total-strip .value{font-size:1.25rem;font-weight:700;font-family:'Source Serif 4',serif;}
+.total-strip .value[data-exact],.metric .value[data-exact]{cursor:pointer;border-bottom:1px dotted currentColor;}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.metric{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:12px 14px;
+}
+.metric .label{font-size:.7rem;color:var(--muted);margin-bottom:4px;}
+.metric .value{font-size:1.05rem;font-weight:700;font-family:'Source Serif 4',serif;}
+.metric.wide{grid-column:1/-1;}
+.empty{
+  text-align:center;color:var(--muted);font-size:.85rem;
+  padding:26px 10px;border:1px dashed var(--line);border-radius:var(--radius);
+}
+#tabs{
+  position:fixed;left:0;right:0;bottom:0;
+  background:var(--navy);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  z-index:20;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+#tabs button{
+  flex:1;background:none;border:none;color:rgba(255,255,255,.55);
+  font-family:inherit;font-size:.66rem;padding:9px 2px 8px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;
+}
+#tabs button .ic{font-size:1.1rem;line-height:1;}
+#tabs button.active{color:var(--gold);}
+#fab{
+  position:fixed;right:18px;
+  bottom:calc(74px + env(safe-area-inset-bottom,0px));
+  width:52px;height:52px;border-radius:50%;
+  background:var(--gold);color:var(--navy);
+  border:none;font-size:1.5rem;font-weight:700;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+  z-index:15;cursor:pointer;
+}
+#overlay{
+  position:fixed;inset:0;background:rgba(10,15,20,.5);
+  display:none;align-items:flex-end;z-index:30;
+}
+#overlay.show{display:flex;}
+#sheet{
+  background:var(--card);width:100%;max-height:88vh;overflow-y:auto;
+  border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));
+  animation:up .18s ease-out;
+}
+@keyframes up{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+#sheet h3{margin:0 0 14px;font-size:1.05rem;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:5px;}
+.field input,.field select{
+  width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;
+  font-size:.92rem;font-family:inherit;background:var(--paper);color:var(--ink);
+}
+.field-row{display:flex;gap:10px;}
+.field-row .field{flex:1;}
+.sheet-actions{display:flex;gap:10px;margin-top:16px;}
+.btn{
+  flex:1;padding:12px;border-radius:10px;border:none;font-size:.92rem;
+  font-weight:600;font-family:inherit;cursor:pointer;
+}
+.btn.primary{background:var(--navy);color:#fff;}
+.btn.danger{background:none;color:var(--brick);border:1px solid var(--brick);}
+.btn.danger.confirming{background:var(--brick);color:#fff;}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--line);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.helper{font-size:.72rem;color:var(--muted);margin:2px 4px 14px;line-height:1.4;}
+.chart{margin:6px 0 4px;}
+.vchart{display:flex;gap:6px;align-items:flex-start;padding:6px 2px 0;}
+.vchart-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+.vchart-bar-wrap{position:relative;height:110px;width:100%;display:flex;justify-content:center;align-items:flex-end;}
+.vchart-bar{width:62%;border-radius:4px 4px 0 0;min-height:2px;}
+.vchart-value{position:absolute;left:50%;transform:translateX(-50%);font-size:.6rem;font-weight:600;white-space:normal;font-family:'Source Serif 4',serif;text-align:center;line-height:1.15;width:56px;}
+.vchart-label{font-size:.65rem;color:var(--muted);margin-top:6px;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vchart-div{display:flex;gap:6px;align-items:flex-start;padding:26px 2px 0;position:relative;}
+.vchart-div-col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+.vchart-half-up{height:66px;width:100%;display:flex;align-items:flex-end;justify-content:center;position:relative;}
+.vchart-half-down{height:66px;width:100%;display:flex;align-items:flex-start;justify-content:center;position:relative;border-top:1.5px solid var(--muted);}
+.vchart-bar-d{width:62%;min-height:2px;}
+.vchart-half-up .vchart-bar-d{border-radius:4px 4px 0 0;}
+.vchart-half-down .vchart-bar-d{border-radius:0 0 4px 4px;}
+.vchart-scale{position:absolute;font-size:.6rem;color:var(--muted);opacity:.75;left:0;}
+.vchart-year-title{font-size:.68rem;color:var(--muted);font-weight:600;margin:10px 4px 2px;}
+.chart-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
+.chart-label{width:74px;flex-shrink:0;font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chart-track{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden;}
+.chart-bar{height:100%;border-radius:5px;}
+.chart-value{width:82px;flex-shrink:0;text-align:right;font-size:.75rem;font-weight:600;font-family:'Source Serif 4',serif;}
+table.mini{width:100%;border-collapse:collapse;font-size:.82rem;}
+table.mini th{text-align:left;font-weight:600;color:var(--muted);font-size:.68rem;
+  padding:6px 4px;border-bottom:1px solid var(--line);}
+table.mini td{padding:7px 4px;border-bottom:1px solid var(--line);}
+table.mini td.num{text-align:right;}
+</style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#10233F">
+</head>
+<body>
+
+<div id="topbar">
+  <h1>Compte Titre BRVM <span style="font-size:.65rem;color:var(--gold-soft);font-weight:400;">· version hors ligne</span></h1>
+  <div class="sub">Suivi personnel — données stockées sur cet appareil uniquement</div>
+  <div id="ecart-pill"><span class="dot"></span><span id="ecart-text"></span></div>
+</div>
+
+<main id="app"></main>
+
+<button id="fab">+</button>
+
+<nav id="tabs">
+  <button data-tab="operations" class="active"><span class="ic">💰</span>Opérations</button>
+  <button data-tab="portefeuille"><span class="ic">📈</span>Titres</button>
+  <button data-tab="dividendes"><span class="ic">🏦</span>Dividendes</button>
+  <button data-tab="liquidite"><span class="ic">💧</span>Liquidité</button>
+  <button data-tab="synthese"><span class="ic">📊</span>Synthèse</button>
+  <button data-tab="corbeille"><span class="ic">🗑️</span>Corbeille</button>
+</nav>
+
+<div id="overlay"><div id="sheet"></div></div>
+
+<div id="auth-screen" style="position:fixed;inset:0;background:var(--navy);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;">
+  <div style="width:100%;max-width:360px;">
+    <h2 style="color:#fff;font-family:'Source Serif 4',serif;margin:0 0 4px;text-align:center;">Compte Titre BRVM</h2>
+    <div style="color:var(--gold-soft);font-size:.8rem;text-align:center;margin-bottom:22px;">Connecte-toi pour synchroniser tes données entre tes appareils</div>
+    <div class="field"><label style="color:var(--gold-soft);">E-mail</label><input id="auth-email" type="email" autocomplete="username"></div>
+    <div class="field"><label style="color:var(--gold-soft);">Mot de passe</label><input id="auth-password" type="password" autocomplete="current-password"></div>
+    <div id="auth-error" style="color:var(--brick);font-size:.78rem;margin:4px 0 14px;min-height:1em;"></div>
+    <button id="auth-signin" class="btn primary" style="width:100%;margin-bottom:10px;">Se connecter</button>
+    <button id="auth-signup" class="btn ghost" style="width:100%;background:transparent;color:var(--gold-soft);border-color:var(--gold-soft);margin-bottom:10px;">Créer un compte</button>
+    <button id="auth-reset" type="button" style="display:block;width:100%;background:none;border:none;color:var(--gold-soft);font-size:.76rem;text-decoration:underline;padding:6px;font-family:inherit;">Mot de passe oublié ?</button>
+  </div>
+</div>
+
+<script id="app-data" type="application/json">{"operations": [{"id": "754c2097", "libelle": "Ouverture de compte", "date": "2024", "montant": 10000, "frais": 0}, {"id": "e5e05645", "libelle": "Dépôt initial", "date": "2024", "montant": 100000, "frais": 0}, {"id": "4f04d1db", "libelle": "Deuxième dépôt", "date": "2025", "montant": 100000, "frais": 0}, {"id": "fd6cd40a", "libelle": "Virement 1", "date": "août 2026", "montant": 2648, "frais": 3}, {"id": "7d7d5407", "libelle": "Virement 2", "date": "août 2026", "montant": 235000, "frais": 235}, {"id": "296b5a43", "libelle": "Virement 3", "date": "septembre 2026", "montant": 50000, "frais": 50}], "achats": [{"id": "71a5655b", "titre": "CBI BF", "cump": 10129.86, "qte": 7, "date": "2024-10-15"}, {"id": "36067e5c", "titre": "BOA Mali", "cump": 2382.96, "qte": 25, "date": "2024-10-15"}, {"id": "8f0143f8", "titre": "BOA Bénin", "cump": 4431.2, "qte": 10, "date": "2024-10-15"}, {"id": "e9f1f269", "titre": "BICB", "cump": 8629.4, "qte": 5, "date": "2026-08-15"}, {"id": "e0fbe60a", "titre": "SNTS", "cump": 42588, "qte": 4, "date": "2026-09-15"}], "dividendes": [{"id": "bc0161a2", "titre": "CBI BF", "annee": 2025, "dateDetachement": "2025-07-03", "dividendeParAction": 555}, {"id": "1e20f227", "titre": "CBI BF", "annee": 2026, "dateDetachement": "2026-06-18", "dividendeParAction": 900}, {"id": "24375a92", "titre": "BOA Mali", "annee": 2025, "dateDetachement": "2025-05-30", "dividendeParAction": 237.15}, {"id": "813d9873", "titre": "BOA Mali", "annee": 2026, "dateDetachement": "2026-06-02", "dividendeParAction": 305.04}, {"id": "2ac579d6", "titre": "BOA Bénin", "annee": 2025, "dateDetachement": "2025-05-30", "dividendeParAction": 468}, {"id": "0a6a1ef5", "titre": "BOA Bénin", "annee": 2026, "dateDetachement": "2026-05-22", "dividendeParAction": 585}, {"id": "57023315", "titre": "BICB", "annee": 2025, "dateDetachement": null, "dividendeParAction": 0}, {"id": "b7cbe161", "titre": "BICB", "annee": 2026, "dateDetachement": "2026-07-30", "dividendeParAction": 254.6}, {"id": "4bf1bb37", "titre": "SNTS", "annee": 2025, "dateDetachement": "2025-05-20", "dividendeParAction": 1655}, {"id": "41d95144", "titre": "SNTS", "annee": 2026, "dateDetachement": "2026-05-22", "dividendeParAction": 1655}], "mouvements": [], "ventes": [], "liquiditeReelle": {"montant": 129000, "date": "25/09/2026"}, "corbeille": [], "coursActuels": {}}</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.1/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.1/firebase-auth-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.11.1/firebase-firestore-compat.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- state ---------- */
+function uid(){ return Math.random().toString(36).slice(2,10); }
+
+var STORAGE_KEY = 'brvm-compte-titre-v1';
+var SEED_DATA_TEXT = document.getElementById('app-data').textContent;
+
+function loadState(){
+  try{
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      var parsed = JSON.parse(saved);
+      if(parsed && parsed.operations) return parsed;
+    }
+  }catch(e){ /* localStorage indisponible (mode privé strict, etc.) */ }
+  try{
+    var seeded = JSON.parse(SEED_DATA_TEXT);
+    if(seeded && seeded.operations) return seeded;
+  }catch(e){}
+  return null;
+}
+var state = loadState();
+
+/* ---------- synchronisation multi-appareils (Firebase) ----------
+   FIREBASE_CONFIGURED reste a false tant qu'aucune configuration reelle n'a ete
+   collee ci-dessous : dans ce cas, l'ecran de connexion ne s'affiche jamais et
+   l'app demarre exactement comme avant (local uniquement). Une fois la vraie
+   configuration en place, tout devient actif automatiquement. ---------- */
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDjHybPTfZRHT9P2lK3T3_nQLRTYk_w-Uk",
+  authDomain: "compte-titre-brvm.firebaseapp.com",
+  projectId: "compte-titre-brvm",
+  storageBucket: "compte-titre-brvm.firebasestorage.app",
+  messagingSenderId: "939191003573",
+  appId: "1:939191003573:web:4f261a05a27140f59691fc"
+};
+var FIREBASE_CONFIGURED = !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey);
+var fbAuth = null, fbDb = null;
+var LAST_SYNC_KEY = 'brvm-last-synced-v1';
+var SYNC_DEBOUNCE_MS = 1500;
+var syncTimer = null;
+
+function initFirebase(){
+  if(!FIREBASE_CONFIGURED) return false;
+  try{
+    firebase.initializeApp(FIREBASE_CONFIG);
+    fbAuth = firebase.auth();
+    fbDb = firebase.firestore();
+    return true;
+  }catch(e){ return false; }
+}
+
+function showAuthScreen(show){
+  document.getElementById('auth-screen').style.display = show ? 'flex' : 'none';
+}
+function authErrorMessage(err){
+  var map = {
+    'auth/invalid-email': 'Adresse e-mail invalide.',
+    'auth/user-not-found': 'Aucun compte avec cet e-mail.',
+    'auth/wrong-password': 'Mot de passe incorrect.',
+    'auth/invalid-credential': 'E-mail ou mot de passe incorrect.',
+    'auth/email-already-in-use': 'Un compte existe déjà avec cet e-mail — utilise "Se connecter".',
+    'auth/weak-password': 'Le mot de passe doit contenir au moins 6 caractères.',
+    'auth/network-request-failed': 'Pas de connexion internet — réessaie plus tard.'
+  };
+  return (err && map[err.code]) || (err && err.message) || 'Une erreur est survenue.';
+}
+function wireAuthScreen(){
+  var emailEl = document.getElementById('auth-email');
+  var passEl = document.getElementById('auth-password');
+  var errEl = document.getElementById('auth-error');
+  function run(action){
+    errEl.textContent = '';
+    var email = emailEl.value.trim();
+    var pass = passEl.value;
+    if(!email || !pass){ errEl.textContent = 'Indique ton e-mail et ton mot de passe.'; return; }
+    action(email, pass).catch(function(err){ errEl.textContent = authErrorMessage(err); });
+  }
+  document.getElementById('auth-signin').onclick = function(){
+    run(function(email,pass){ return fbAuth.signInWithEmailAndPassword(email, pass); });
+  };
+  document.getElementById('auth-signup').onclick = function(){
+    run(function(email,pass){ return fbAuth.createUserWithEmailAndPassword(email, pass); });
+  };
+  document.getElementById('auth-reset').onclick = function(){
+    var email = emailEl.value.trim();
+    errEl.textContent = '';
+    if(!email){ errEl.textContent = 'Indique ton e-mail ci-dessus, puis réessaie.'; return; }
+    fbAuth.sendPasswordResetEmail(email).then(function(){
+      errEl.style.color = 'var(--good)';
+      errEl.textContent = 'E-mail de réinitialisation envoyé.';
+    }).catch(function(err){ errEl.style.color = 'var(--brick)'; errEl.textContent = authErrorMessage(err); });
+  };
+}
+function cloudDocRef(){
+  return fbDb.collection('users').doc(fbAuth.currentUser.uid);
+}
+function pushStateToCloud(){
+  if(!FIREBASE_CONFIGURED || !fbAuth || !fbAuth.currentUser) return;
+  var payload = {state: state, updatedAt: new Date().toISOString()};
+  cloudDocRef().set(payload).then(function(){
+    try{ localStorage.setItem(LAST_SYNC_KEY, payload.updatedAt); }catch(e){}
+  }).catch(function(){ /* hors ligne ou regle refusee : reessaiera au prochain changement */ });
+}
+function scheduleCloudPush(){
+  if(!FIREBASE_CONFIGURED) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushStateToCloud, SYNC_DEBOUNCE_MS);
+}
+function pullStateFromCloudThenBoot(){
+  cloudDocRef().get().then(function(doc){
+    if(doc.exists && doc.data() && doc.data().state){
+      var cloud = doc.data();
+      var lastSynced = null;
+      try{ lastSynced = localStorage.getItem(LAST_SYNC_KEY); }catch(e){}
+      if(!lastSynced || cloud.updatedAt > lastSynced){
+        state = cloud.state;
+        if(!state.corbeille) state.corbeille = [];
+        if(!state.ventes) state.ventes = [];
+        if(!state.coursActuels) state.coursActuels = {};
+        doSave();
+        try{ localStorage.setItem(LAST_SYNC_KEY, cloud.updatedAt); }catch(e){}
+      }
+    } else {
+      pushStateToCloud();
+    }
+    finishBoot();
+  }).catch(function(){
+    /* hors ligne au premier chargement apres connexion : on demarre avec les donnees locales deja chargees */
+    finishBoot();
+  });
+}
+function signOutApp(){
+  if(!FIREBASE_CONFIGURED || !fbAuth) return;
+  fbAuth.signOut();
+}
+
+/* ---------- outils : noms de titres, CUMP pondere, tri par date ---------- */
+function normKey(s){
+  return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+}
+var TICKER_ALIASES = {BOAMALI:'BOAM', BOABENIN:'BOAB', BOABURKINA:'BOABF', BOABURKINAFASO:'BOABF',
+  BOACOTEDIVOIRE:'BOAC', BOANIGER:'BOAN', BOASENEGAL:'BOAS', SONATEL:'SNTS'};
+function tickerOf(titre){ var k = normKey(titre); return TICKER_ALIASES[k] || k; }
+function knownTitres(){
+  var seen = {}, out = [];
+  ['achats','ventes','dividendes'].forEach(function(l){
+    (state[l]||[]).forEach(function(x){ if(x.titre && !seen[x.titre]){ seen[x.titre]=1; out.push(x.titre); } });
+  });
+  return out;
+}
+function canonicalTitre(name){
+  var t = String(name||'').trim();
+  var known = knownTitres();
+  for(var i=0;i<known.length;i++){ if(normKey(known[i])===normKey(t)) return known[i]; }
+  for(var j=0;j<known.length;j++){ if(tickerOf(known[j])===tickerOf(t)) return known[j]; }
+  var tk = tickerOf(t);
+  if(tk && autoTickers[tk]) return tk;
+  return t;
+}
+function coursEffectifs(){
+  var m = {};
+  positionConsolidee().forEach(function(p){
+    var i = coursInfoOf(p.titre);
+    if(i) m[p.titre] = {cours:i.cours, date:i.date};
+  });
+  return m;
+}
+function sortableDate(d){
+  // Rend une date triable meme si elle a ete enregistree a l'ancien format libre
+  // (ex: "04/09/2026" au lieu de "2026-09-04") : sans cette normalisation, un tri
+  // texte brut classe "04/10/2026" avant "28/09/2026", ce qui est faux.
+  var s = String(d||'');
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  var mDMY = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(mDMY) return mDMY[3]+'-'+mDMY[2].padStart(2,'0')+'-'+mDMY[1].padStart(2,'0');
+  var iso = dateToISO(s);
+  return iso || s;
+}
+function byDate(a,b){ return sortableDate(a.date).localeCompare(sortableDate(b.date)); }
+
+/* ---------- listes repliables : n'affiche que les plus recentes, le reste derriere un bouton ---------- */
+var expandedSections = {};
+function collapsibleRows(key, cardsArray, opts){
+  opts = opts || {};
+  var n = (opts.visible!=null) ? opts.visible : 2;
+  if(cardsArray.length <= n) return cardsArray.join('');
+  var sliceAt = cardsArray.length - n;
+  var labelCount = (opts.count!=null) ? opts.count : sliceAt;
+  var expanded = !!expandedSections[key];
+  var toggleBtn = '<button type="button" class="toggle-older" data-toggle-section="'+esc(key)+'">'+
+    (expanded ? '▲ Masquer les '+labelCount+' plus anciens' : '▼ Afficher les '+labelCount+' plus anciens')+
+    '</button>';
+  return expanded ? (toggleBtn + cardsArray.join('')) : (toggleBtn + cardsArray.slice(sliceAt).join(''));
+}
+function todayISO(){
+  var d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+var MOIS_FR = {janvier:1,'février':2,fevrier:2,mars:3,avril:4,mai:5,juin:6,juillet:7,'août':8,aout:8,
+  septembre:9,octobre:10,novembre:11,'décembre':12,decembre:12};
+function dateToISO(txt){
+  // Convertit en douceur une ancienne date en texte libre ("août 2026", "2024") en une
+  // vraie date ISO, pour pre-remplir le champ date sans perdre l'information existante.
+  // Une vraie date ISO passe telle quelle ; le reste est une estimation raisonnable
+  // (1er jour du mois, ou 1er janvier si seule l'annee est connue).
+  var s = String(txt||'').trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  var mMonthYear = s.toLowerCase().match(/([a-zéû]+)\s+(\d{4})/);
+  if(mMonthYear && MOIS_FR[mMonthYear[1]]){
+    return mMonthYear[2]+'-'+String(MOIS_FR[mMonthYear[1]]).padStart(2,'0')+'-01';
+  }
+  var mYear = s.match(/^(\d{4})$/);
+  if(mYear) return mYear[1]+'-01-01';
+  return '';
+}
+function titreDatalist(){
+  var seen = {}, opts = [];
+  knownTitres().concat(Object.keys(autoTickers)).forEach(function(t){
+    if(!seen[t]){ seen[t]=1; opts.push('<option value="'+esc(t)+'"></option>'); }
+  });
+  return '<datalist id="titres-list">'+opts.join('')+'</datalist>';
+}
+
+/* ---------- cours automatiques (recuperes via GitHub Actions, fichier cours-auto.json a la racine) ----------
+   Mis en cache localement (localStorage) a chaque recuperation reussie, pour que l'app
+   affiche toujours le dernier cours connu meme sans connexion internet. ---------- */
+var AUTO_CACHE_KEY = 'brvm-auto-cours-cache-v1';
+var autoCours = {};
+var autoCoursUpdatedAt = null;
+var autoTickers = {};
+(function loadAutoCoursFromCache(){
+  try{
+    var cached = JSON.parse(localStorage.getItem(AUTO_CACHE_KEY) || 'null');
+    if(cached){
+      autoCours = cached.cours || {};
+      autoTickers = cached.tickers || {};
+      autoCoursUpdatedAt = cached.updatedAt || null;
+    }
+  }catch(e){ /* pas de cache lisible : pas grave, on part de zero */ }
+})();
+function saveAutoCoursToCache(){
+  try{
+    localStorage.setItem(AUTO_CACHE_KEY, JSON.stringify({cours:autoCours, tickers:autoTickers, updatedAt:autoCoursUpdatedAt}));
+  }catch(e){ /* stockage plein ou indisponible : pas grave, la session reste utilisable */ }
+}
+function loadAutoCours(){
+  var RAW = 'https://raw.githubusercontent.com/robertoadekambi-blip/compte-titre-brvm/main/cours-auto.json';
+  function apply(data){
+    autoCours = (data && data.cours) || {};
+    autoTickers = (data && data.tickers) || {};
+    autoCoursUpdatedAt = (data && data.updatedAt) || null;
+    saveAutoCoursToCache();
+    render();
+  }
+  function tryFetch(url){
+    return fetch(url, {cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('absent');
+      return r.json();
+    });
+  }
+  try{
+    tryFetch(RAW).catch(function(){ return tryFetch('./cours-auto.json'); })
+      .then(apply)
+      .catch(function(){ /* pas de reseau : le cache local charge au demarrage reste affiche */ });
+  }catch(e){ /* fetch indisponible : le cache local reste affiche */ }
+}
+var DIV_CACHE_KEY = 'brvm-auto-dividendes-cache-v1';
+var autoDividendes = {tickers:{}, autres:{}};
+(function loadAutoDividendesFromCache(){
+  try{
+    var cached = JSON.parse(localStorage.getItem(DIV_CACHE_KEY) || 'null');
+    if(cached) autoDividendes = {tickers:cached.tickers||{}, autres:cached.autres||{}};
+  }catch(e){ /* pas de cache lisible : pas grave */ }
+})();
+function loadAutoDividendes(){
+  var RAW = 'https://raw.githubusercontent.com/robertoadekambi-blip/compte-titre-brvm/main/dividendes-auto.json';
+  function apply(data){
+    autoDividendes = {tickers:(data && data.tickers) || {}, autres:(data && data.autres) || {}};
+    try{ localStorage.setItem(DIV_CACHE_KEY, JSON.stringify(autoDividendes)); }catch(e){}
+    render();
+  }
+  function tryFetch(url){
+    return fetch(url, {cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('absent');
+      return r.json();
+    });
+  }
+  try{
+    tryFetch(RAW).catch(function(){ return tryFetch('./dividendes-auto.json'); })
+      .then(apply)
+      .catch(function(){ /* pas de dividendes auto disponibles : l'app fonctionne comme avant */ });
+  }catch(e){ /* fetch indisponible : pas grave */ }
+}
+function anneeFromDate(iso, exercice){
+  if(iso) return Number(iso.slice(0,4));
+  var e = parseInt(exercice,10);
+  return e ? e+1 : new Date().getFullYear();
+}
+function autoDividendesSuggeres(){
+  var out = [];
+  // Pour chaque titre que l'utilisatrice possede ou a deja saisi, on cherche son code
+  // BRVM et on regarde si le calendrier automatique connait un dividende pour ce code.
+  knownTitres().forEach(function(titre){
+    var code = tickerOf(titre);
+    var entries = code ? (autoDividendes.tickers||{})[code] : null;
+    (Array.isArray(entries) ? entries : []).forEach(function(entry){
+      var annee = anneeFromDate(entry.dateExDividende, entry.exercice);
+      var dejaManuel = state.dividendes.some(function(d){ return d.titre===titre && Number(d.annee)===annee; });
+      if(dejaManuel) return;
+      out.push({
+        id: 'auto-'+titre+'-'+annee,
+        titre: titre, annee: annee,
+        dateDetachement: entry.dateExDividende,
+        dividendeParAction: entry.montant,
+        exercice: entry.exercice!=null ? entry.exercice : null,
+        source: 'auto'
+      });
+    });
+  });
+  return out;
+}
+// Pour une ligne DEJA saisie a la main, l'ecart eventuel avec la valeur publiee par la
+// BRVM (montant different pour le meme titre+annee) — jamais applique automatiquement.
+function ecartAutoPourLigne(d){
+  var code = tickerOf(d.titre);
+  var entries = (autoDividendes.tickers||{})[code];
+  if(!entries) return null;
+  var m = entries.find(function(e){ return anneeFromDate(e.dateExDividende, e.exercice)===Number(d.annee); });
+  if(!m) return null;
+  var montantDiffere = Math.abs(Number(m.montant) - Number(d.dividendeParAction)) >= 0.01;
+  var dateDiffere = (d.dateDetachement||null) !== (m.dateExDividende||null);
+  if(!montantDiffere && !dateDiffere) return null;
+  return m;
+}
+
+/* ---------- persistance locale (aucune dépendance à Claude ou à internet) ---------- */
+var saveTimer = null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 200);
+}
+function doSave(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){ /* stockage plein ou indisponible : la session reste utilisable, juste non sauvegardée */ }
+  scheduleCloudPush();
+}
+
+/* ---------- calculations ---------- */
+function total1(){
+  // Les frais de versement (ex: frais de virement bancaire) ne sont jamais credites
+  // sur le compte : ils sont suivis a part (totalFraisOperations) mais n'entrent dans
+  // aucun calcul de total, de liquidite ou de performance.
+  return state.operations.reduce(function(s,o){return s+Number(o.montant||0);},0);
+}
+function totalFraisOperations(){
+  return state.operations.reduce(function(s,o){return s+Number(o.frais||0);},0);
+}
+function anneeFromFreeDate(txt){
+  var m = String(txt||'').match(/(19|20)\d{2}/);
+  return m ? m[0] : null;
+}
+function fraisOperationsParAnnee(){
+  var map = {};
+  state.operations.forEach(function(o){
+    if(!o.frais) return;
+    var annee = anneeFromFreeDate(o.date) || 'Sans date';
+    if(!map[annee]) map[annee] = {annee:annee, total:0};
+    map[annee].total += Number(o.frais||0);
+  });
+  return Object.keys(map).sort().map(function(k){ return map[k]; });
+}
+function total2(){
+  return state.achats.reduce(function(s,a){return s+Number(a.cump||0)*Number(a.qte||0);},0);
+}
+function cumpAt(titre, date){
+  function calc(filterDate){
+    var q = 0, m = 0;
+    state.achats.forEach(function(a){
+      if(a.titre !== titre) return;
+      if(filterDate && a.date && a.date > filterDate) return;
+      q += Number(a.qte||0); m += Number(a.qte||0)*Number(a.cump||0);
+    });
+    return q ? m/q : 0;
+  }
+  var v = date ? calc(date) : 0;
+  return v || calc(null);
+}
+function cumpOf(titre){ return cumpAt(titre, null); }
+function totalVentes(){
+  return state.ventes.reduce(function(s,v){return s+Number(v.qte||0)*Number(v.prixVente||0);},0);
+}
+function plusValueTotal(){
+  return state.ventes.reduce(function(s,v){
+    return s+(Number(v.prixVente||0)-cumpAt(v.titre, v.date))*Number(v.qte||0);
+  },0);
+}
+function positionConsolidee(){
+  var map = {};
+  state.achats.forEach(function(a){
+    if(!map[a.titre]) map[a.titre] = {titre:a.titre, qte:0};
+    map[a.titre].qte += Number(a.qte||0);
+  });
+  state.ventes.forEach(function(v){
+    if(!map[v.titre]) map[v.titre] = {titre:v.titre, qte:0};
+    map[v.titre].qte -= Number(v.qte||0);
+  });
+  return Object.keys(map).map(function(titre){
+    var qte = map[titre].qte;
+    return {titre:titre, qte:qte, montant: qte*cumpOf(titre)};
+  });
+}
+function coursInfoOf(titre){
+  var manual = state.coursActuels[titre];
+  if(manual && manual.cours!=null && manual.cours!==''){
+    return {cours:Number(manual.cours), date:manual.date||'', source:'manuel'};
+  }
+  var auto = autoInfoOf(titre);
+  if(auto && auto.cours!=null){
+    return {cours:Number(auto.cours), date:auto.date||'', source:'auto'};
+  }
+  return null;
+}
+function autoInfoOf(titre){
+  return autoCours[titre] || autoTickers[tickerOf(titre)] || null;
+}
+function coursActuelOf(titre){
+  var info = coursInfoOf(titre);
+  return info ? info.cours : null;
+}
+function valeurMarchandeTotal(){
+  return positionConsolidee().reduce(function(s,p){
+    var cours = coursActuelOf(p.titre);
+    var prix = (cours!=null) ? cours : cumpOf(p.titre);
+    return s + p.qte*prix;
+  },0);
+}
+function plusValueLatenteTotal(){
+  return positionConsolidee().reduce(function(s,p){
+    var cours = coursActuelOf(p.titre);
+    if(cours==null) return s;
+    return s + (cours - cumpOf(p.titre))*p.qte;
+  },0);
+}
+function toutCoursRenseignes(){
+  return positionConsolidee().every(function(p){ return coursActuelOf(p.titre)!=null; });
+}
+function performanceGlobale(){
+  var capital = total2();
+  if(capital===0) return 0;
+  return (valeurMarchandeTotal() + totalDividendesAll() + totalVentes() - capital) / capital;
+}
+function enrichOne(d){
+  var achLots = state.achats.filter(function(a){
+    return a.titre === d.titre && d.dateDetachement && a.date <= d.dateDetachement;
+  });
+  var vteLots = state.ventes.filter(function(v){
+    return v.titre === d.titre && d.dateDetachement && v.date <= d.dateDetachement;
+  });
+  var nbAch = achLots.reduce(function(s,a){return s+Number(a.qte||0);},0);
+  var nbVte = vteLots.reduce(function(s,v){return s+Number(v.qte||0);},0);
+  var nb = Math.max(0, nbAch - nbVte);
+  var capital = nb * cumpAt(d.titre, d.dateDetachement);
+  var total = Number(d.dividendeParAction||0) * nb;
+  return Object.assign({}, d, {nbTitresRetenu:nb, total:total, capitalRetenu:capital});
+}
+function enrichDividendes(){
+  // Seules les lignes confirmees (saisies ou validees par l'utilisateur) comptent dans
+  // les totaux, la synthese et la liquidite theorique. Les suggestions automatiques non
+  // validees n'y figurent jamais : voir enrichSuggestions() pour leur affichage a part.
+  return state.dividendes.map(enrichOne);
+}
+function enrichSuggestions(){
+  return autoDividendesSuggeres().map(enrichOne);
+}
+function totalsByYear(){
+  var enriched = enrichDividendes();
+  var map = {};
+  enriched.forEach(function(d){
+    if(!map[d.annee]) map[d.annee] = {annee:d.annee, total:0, capital:0};
+    map[d.annee].total += d.total;
+    map[d.annee].capital += d.capitalRetenu;
+  });
+  return Object.values(map).sort(function(a,b){return a.annee-b.annee;});
+}
+function totalsByTitre(){
+  var enriched = enrichDividendes();
+  var map = {};
+  enriched.forEach(function(d){
+    if(!map[d.titre]) map[d.titre] = {titre:d.titre, total:0};
+    map[d.titre].total += d.total;
+  });
+  var posByTitre = {};
+  positionConsolidee().forEach(function(p){ posByTitre[p.titre] = p.qte; });
+  Object.keys(map).forEach(function(titre){
+    var qteDetenue = posByTitre[titre] || 0;
+    var capitalActuel = qteDetenue * cumpOf(titre);
+    map[titre].capitalActuel = capitalActuel;
+    map[titre].rendementReel = capitalActuel > 0 ? (map[titre].total / capitalActuel) : null;
+  });
+  return Object.values(map).sort(function(a,b){return b.total-a.total;});
+}
+function totalDividendesAll(){
+  return enrichDividendes().reduce(function(s,d){return s+d.total;},0);
+}
+function totalFrais(){
+  return state.mouvements.filter(function(m){return m.type==='Frais';})
+    .reduce(function(s,m){return s+Number(m.montant||0);},0);
+}
+function totalAutres(){
+  return state.mouvements.filter(function(m){return m.type==='Autre';})
+    .reduce(function(s,m){return s+Number(m.montant||0);},0);
+}
+function fraisAutresParAnnee(){
+  var map = {};
+  state.mouvements.forEach(function(m){
+    if(!m.annee) return;
+    if(!map[m.annee]) map[m.annee] = {annee:m.annee, frais:0, autres:0};
+    if(m.type==='Frais') map[m.annee].frais += Number(m.montant||0);
+    if(m.type==='Autre') map[m.annee].autres += Number(m.montant||0);
+  });
+  return Object.values(map).sort(function(a,b){return a.annee-b.annee;});
+}
+function liquiditeTheorique(){
+  return total1() - total2() + totalDividendesAll() + totalFrais() + totalAutres() + totalVentes();
+}
+function ecart(){
+  return Number(state.liquiditeReelle.montant||0) - liquiditeTheorique();
+}
+
+/* ---------- formatting ---------- */
+function fmtFull(n){
+  n = Math.round((Number(n)||0)*100)/100;
+  var parts = n.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:2});
+  return parts + ' F CFA';
+}
+function fmtPct(n){ return (Math.round(n*10000)/100).toLocaleString('fr-FR') + ' %'; }
+function fmtCompact(n){
+  n = Number(n)||0;
+  var sign = n<0 ? '-' : '';
+  var abs = Math.abs(n);
+  if(abs >= 1000000) return sign+(Math.round(abs/100000)/10).toLocaleString('fr-FR')+'M';
+  if(abs >= 1000) return sign+Math.round(abs/1000)+'k';
+  return sign+Math.round(abs);
+}
+function fmt(n){
+  // En dessous d'un million, la valeur complete est plus lisible et ne surcharge
+  // pas l'affichage ; au-dela, le format compact (k/M) reste plus clair.
+  return (Math.abs(Number(n)||0) < 1000000) ? fmtFull(n) : (fmtCompact(n) + ' F CFA');
+}
+function fmtDate(iso){
+  if(!iso) return '—';
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  var p = iso.split('-');
+  return p[2]+'/'+p[1]+'/'+p[0];
+}
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function vBarChartPercent(items){
+  if(!items.length) return '';
+  var total = items.reduce(function(s,i){return s+Math.abs(i.value);},0) || 1;
+  var maxVal = 0;
+  items.forEach(function(i){ maxVal = Math.max(maxVal, Math.abs(i.value)); });
+  if(maxVal === 0) maxVal = 1;
+  var cols = items.map(function(it){
+    var pct = Math.abs(it.value)/total*100;
+    var barPct = Math.max(4, Math.round(Math.abs(it.value)/maxVal*100));
+    return '<div class="vchart-col" data-exact="'+esc(it.label)+' : '+fmtFull(it.value)+'">'+
+      '<div class="vchart-bar-wrap">'+
+      '<div class="vchart-value" style="bottom:calc('+barPct+'% + 4px);">'+pct.toFixed(1)+'%</div>'+
+      '<div class="vchart-bar" style="height:'+barPct+'%;background:var(--gold);"></div>'+
+      '</div>'+
+      '<div class="vchart-label">'+esc(it.label)+'</div>'+
+      '</div>';
+  }).join('');
+  return '<div class="vchart">'+cols+'</div>'+
+    '<div class="helper" style="margin-top:2px;">Appuie sur une barre pour voir le montant exact.</div>';
+}
+function vBarChartMagnitude(items, opts){
+  opts = opts || {};
+  if(!items.length) return '';
+  var maxVal = 0;
+  items.forEach(function(i){ maxVal = Math.max(maxVal, Math.abs(i.value)); });
+  if(maxVal === 0) maxVal = 1;
+  var cols = items.map(function(it){
+    var barPct = Math.max(4, Math.round(Math.abs(it.value)/maxVal*100));
+    var color = it.value < 0 ? 'var(--brick)' : (opts.color || 'var(--gold)');
+    return '<div class="vchart-col" data-exact="'+esc(it.label)+' : '+fmtFull(it.value)+'">'+
+      '<div class="vchart-bar-wrap">'+
+      '<div class="vchart-value" style="bottom:calc('+barPct+'% + 4px);">'+fmtCompact(it.value)+'</div>'+
+      '<div class="vchart-bar" style="height:'+barPct+'%;background:'+color+';"></div>'+
+      '</div>'+
+      '<div class="vchart-label">'+esc(it.label)+'</div>'+
+      '</div>';
+  }).join('');
+  return '<div class="vchart">'+cols+'</div>'+
+    '<div class="helper" style="margin-top:2px;">Valeurs compactées (k = milliers, M = millions). Appuie sur une barre pour le montant exact.</div>';
+}
+function vBarChartSigned(items){
+  if(!items.length) return '';
+  var maxAbs = 0;
+  items.forEach(function(i){ maxAbs = Math.max(maxAbs, Math.abs(i.value)); });
+  if(maxAbs === 0) maxAbs = 1;
+  var cols = items.map(function(it){
+    var barPct = Math.max(3, Math.round(Math.abs(it.value)/maxAbs*100));
+    var color = it.value < 0 ? 'var(--brick)' : 'var(--gold)';
+    var bar = '<div class="vchart-bar-d" style="height:'+barPct+'%;background:'+color+';"></div>';
+    var valueLabel = '<div class="vchart-value" style="'+
+      (it.value>=0 ? ('bottom:calc('+barPct+'% + 4px);') : ('top:calc('+barPct+'% + 4px);'))+
+      '">'+fmtCompact(it.value)+'</div>';
+    return '<div class="vchart-div-col" data-exact="'+esc(it.label)+' : '+fmtFull(it.value)+'">'+
+      '<div class="vchart-half-up">'+(it.value>=0?valueLabel:'')+(it.value>=0?bar:'')+'</div>'+
+      '<div class="vchart-half-down">'+(it.value<0?valueLabel:'')+(it.value<0?bar:'')+'</div>'+
+      '<div class="vchart-label">'+esc(it.label)+'</div>'+
+      '</div>';
+  }).join('');
+  return '<div class="helper" style="margin:0 0 6px;">Échelle : ±'+fmtCompact(maxAbs)+' F CFA. La ligne horizontale = 0.</div>'+
+    '<div class="vchart-div">'+cols+'</div>'+
+    '<div class="helper" style="margin-top:8px;">Valeurs compactées (k = milliers, M = millions). Appuie sur une barre pour le montant exact.</div>';
+}
+
+/* ---------- rendering ---------- */
+var currentTab = 'operations';
+
+function renderTopbar(){
+  var e = ecart();
+  var pill = document.getElementById('ecart-pill');
+  var text = document.getElementById('ecart-text');
+  var rounded = Math.round(e*100)/100;
+  if(Math.abs(rounded) < 1){
+    pill.className = 'ok';
+    text.textContent = 'Écart 0 F CFA — tout est cohérent';
+  } else {
+    pill.className = 'warn';
+    text.textContent = 'Écart '+fmt(e)+' — mouvement manquant';
+  }
+}
+
+function renderOperations(){
+  var rows = collapsibleRows('operations', state.operations.slice().sort(byDate).map(function(o){
+    var tot = Number(o.montant||0);
+    return '<div class="card" data-open="operations" data-id="'+o.id+'">'+
+      '<div class="row1"><span class="titre">'+esc(o.libelle)+'</span>'+
+      '<span class="montant pos tabular">'+fmt(tot)+'</span></div>'+
+      '<div class="meta">'+esc(fmtDate(o.date))+(o.frais?(' · frais de virement '+fmt(o.frais)):'')+'</div></div>';
+  }));
+  var parAnneeFrais = fraisOperationsParAnnee();
+  var totalFraisOps = totalFraisOperations();
+  return '<div class="total-strip"><span class="label">Total des fonds versés</span>'+
+    '<span class="value tabular" data-exact="'+esc(fmtFull(total1()))+'" data-desc="Somme de tous tes versements sur le compte, hors frais de virement bancaire.">'+fmt(total1())+'</span></div>'+
+    '<div class="section-title">Historique des versements</div>'+
+    (rows || '<div class="empty">Aucun versement enregistré</div>')+
+    (totalFraisOps ?
+      '<div class="section-title">Frais de virement bancaire</div>'+
+      '<div class="card"><div class="row1"><span class="titre">Total des frais payés</span>'+
+      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFraisOps))+'" data-desc="Somme des frais payés pour effectuer tes virements — n\'entre dans aucun calcul de l\'app.">'+fmt(totalFraisOps)+'</span></div></div>'+
+      vBarChartMagnitude(parAnneeFrais.map(function(y){ return {label:String(y.annee), value:y.total}; }), {color:'var(--brick)'})+
+      '<div class="helper">Ces frais servent uniquement à effectuer les virements — ils ne sont jamais crédités sur le compte. Ils sont suivis ici pour information seulement, et n\'entrent dans aucun total ni calcul de l\'application.</div>'
+      : '');
+}
+
+function renderPortefeuille(){
+  var achatsRows = collapsibleRows('achats', state.achats.slice().sort(byDate).map(function(a){
+    return '<div class="card" data-open="achats" data-id="'+a.id+'">'+
+      '<div class="row1"><span class="titre">'+esc(a.titre)+'</span>'+
+      '<span class="montant tabular">'+fmt(a.cump*a.qte)+'</span></div>'+
+      '<div class="meta">'+a.qte+' titres · CUMP '+fmt(a.cump)+' · '+fmtDate(a.date)+'</div></div>';
+  }));
+  var ventesRows = collapsibleRows('ventes', state.ventes.slice().sort(byDate).map(function(v){
+    var pv = (Number(v.prixVente||0)-cumpAt(v.titre, v.date))*Number(v.qte||0);
+    return '<div class="card" data-open="ventes" data-id="'+v.id+'">'+
+      '<div class="row1"><span class="titre">'+esc(v.titre)+'</span>'+
+      '<span class="montant tabular">'+fmt(v.qte*v.prixVente)+'</span></div>'+
+      '<div class="meta">'+v.qte+' titres · '+fmt(v.prixVente)+'/titre · '+fmtDate(v.date)+
+      ' · '+(pv>=0?'plus-value ':'moins-value ')+fmt(Math.abs(pv))+'</div></div>';
+  }));
+  var pos = positionConsolidee();
+  var posRows = pos.map(function(p){
+    var info = coursInfoOf(p.titre);
+    var cours = info ? info.cours : null;
+    var valeur = cours!=null ? p.qte*cours : p.montant;
+    var pv = cours!=null ? (cours-cumpOf(p.titre))*p.qte : null;
+    var sourceLabel = info ? (info.source==='auto' ? ' (auto)' : ' (manuel)') : '';
+    return '<div class="card" data-open="cours" data-id="'+esc(p.titre)+'">'+
+      '<div class="row1"><span class="titre">'+esc(p.titre)+'</span>'+
+      '<span class="montant tabular">'+fmt(valeur)+'</span></div>'+
+      '<div class="meta">'+p.qte+' titres · CUMP '+fmt(cumpOf(p.titre))+
+      (cours!=null
+        ? (' · cours <strong style="color:var(--gold);">'+fmt(cours)+'</strong>'+sourceLabel+' · '+(pv>=0?'plus-value latente ':'moins-value latente ')+fmt(Math.abs(pv)))
+        : ' · cours non renseigné — appuie pour le saisir')+
+      '</div></div>';
+  }).join('');
+  return '<div class="total-strip"><span class="label">Total investi en titres</span>'+
+    '<span class="value tabular" data-exact="'+esc(fmtFull(total2()))+'" data-desc="Somme de (prix d\'achat moyen pondéré × quantité) pour chaque titre, avant toute vente.">'+fmt(total2())+'</span></div>'+
+    '<div class="section-title">Achats</div>'+
+    (achatsRows || '<div class="empty">Aucun achat enregistré</div>')+
+    '<div class="section-title-row"><span class="section-title" style="margin:0">Ventes</span>'+
+    '<button class="inline-add" data-add="ventes">+ vente</button></div>'+
+    (ventesRows || '<div class="empty">Aucune vente enregistrée</div>')+
+    '<div class="section-title-row"><span class="section-title" style="margin:0">Position consolidée</span>'+
+    (Object.keys(state.coursActuels).length ? '<button class="inline-add" data-autoall="1">Tout en auto</button>' : '')+'</div>'+
+    (posRows || '<div class="empty">Aucune position</div>')+
+    '<div class="helper">Le nombre de titres et le montant investi viennent des achats/ventes (non modifiables ici). Appuie sur un titre pour renseigner ou mettre à jour son cours actuel.</div>'+
+    (pos.length ?
+      '<div class="section-title">Répartition du portefeuille (valeur actuelle)</div>'+
+      vBarChartPercent(pos.map(function(p){
+        var cours = coursActuelOf(p.titre);
+        var valeur = cours!=null ? p.qte*cours : p.montant;
+        return {label:p.titre, value:valeur};
+      }))+
+      '<div class="section-title">Plus/moins-value latente par titre</div>'+
+      vBarChartSigned(pos.map(function(p){
+        var cours = coursActuelOf(p.titre);
+        var pv = cours!=null ? (cours-cumpOf(p.titre))*p.qte : 0;
+        return {label:p.titre, value:pv};
+      }))
+      : '');
+}
+
+function dividendCardHtml(d){
+  var auto = d.source==='auto';
+  var ecart = auto ? null : ecartAutoPourLigne(d);
+  var ecartMsgParts = [];
+  if(ecart){
+    if(Math.abs(Number(ecart.montant) - Number(d.dividendeParAction)) >= 0.01){
+      ecartMsgParts.push('montant : '+fmtFull(ecart.montant));
+    }
+    if((d.dateDetachement||null) !== (ecart.dateExDividende||null)){
+      ecartMsgParts.push('date de détachement : '+fmtDate(ecart.dateExDividende));
+    }
+  }
+  return '<div class="card'+(auto?' auto-suggest':'')+'" data-open="dividendes" data-id="'+d.id+'">'+
+    '<div class="row1"><span class="titre">'+esc(d.titre)+(auto?' <span style="font-weight:400;opacity:.65;font-size:.8em;">(suggéré)</span>':'')+'</span>'+
+    '<span class="montant pos tabular">'+fmt(d.total)+'</span></div>'+
+    '<div class="meta">'+(d.exercice!=null?'Exercice '+d.exercice+' · ':'')+fmtDate(d.dateDetachement)+' · '+fmt(d.dividendeParAction)+'/action · '+
+    d.nbTitresRetenu+' titres retenus'+(auto?' · appuie pour valider':'')+'</div>'+
+    (ecartMsgParts.length ? '<div class="meta" style="color:var(--bad);">La BRVM indique — '+ecartMsgParts.join(' · ')+' — appuie pour corriger.</div>' : '')+
+    '</div>';
+}
+function renderDividendes(){
+  var enriched = enrichDividendes();
+  var suggestions = enrichSuggestions();
+  var pourAffichage = enriched.concat(suggestions);
+  var years = Array.from(new Set(pourAffichage.map(function(d){return d.annee;}))).sort(function(a,b){return a-b;});
+  var nbSuggestions = suggestions.length;
+  var anneeCourante = new Date().getFullYear();
+  var anneesPassees = years.filter(function(y){ return y < anneeCourante; });
+  var anneesCourantes = years.filter(function(y){ return y >= anneeCourante; });
+  var itemsOf = function(y){
+    return pourAffichage.filter(function(d){return d.annee===y;}).sort(function(a,b){
+      return String(a.dateDetachement||'').localeCompare(String(b.dateDetachement||''));
+    });
+  };
+  // Annees passees : toutes regroupees derriere une seule bascule (pas de detail par annee affiche par defaut)
+  var passeesCards = [];
+  var passeesCount = 0;
+  anneesPassees.forEach(function(y){
+    var itemsY = itemsOf(y);
+    if(!itemsY.length) return;
+    passeesCards.push('<div class="vchart-year-title">'+y+'</div>');
+    itemsY.forEach(function(d){ passeesCards.push(dividendCardHtml(d)); passeesCount++; });
+  });
+  var passeesHtml = '';
+  if(passeesCards.length){
+    passeesHtml = collapsibleRows('dividendes-annees-passees', passeesCards, {visible:0, count:passeesCount});
+  }
+  // Annee(s) en cours : seules les 2 plus recentes sont visibles par defaut
+  var courantesCards = [];
+  anneesCourantes.forEach(function(y){
+    itemsOf(y).forEach(function(d){ courantesCards.push(dividendCardHtml(d)); });
+  });
+  var courantesHtml = courantesCards.length
+    ? collapsibleRows('dividendes-annee-courante', courantesCards, {visible:2})
+    : '';
+  var rows = passeesHtml + courantesHtml;
+  var byYear = totalsByYear();
+  var yearCardsHtml = byYear.map(function(y){
+    return '<div class="card">'+
+      '<div class="row1"><span class="titre">'+y.annee+'</span>'+
+      '<span class="montant pos tabular">'+fmt(y.total)+'</span></div>'+
+      '<div class="meta">Capital retenu '+fmt(y.capital)+' · Rendement '+(y.capital?fmtPct(y.total/y.capital):'—')+
+      ' · Rémun. mensuelle '+fmt(y.total/12)+'</div></div>';
+  }).join('');
+  var byTitre = totalsByTitre();
+  var titreRows = byTitre.map(function(t){
+    return '<tr><td>'+esc(t.titre)+'</td><td class="num tabular">'+fmt(t.total)+'</td>'+
+      '<td class="num tabular">'+(t.rendementReel!=null ? fmtPct(t.rendementReel) : '—')+'</td></tr>';
+  }).join('');
+  var titreTotalRow = '<tr style="font-weight:600;border-top:1.5px solid var(--line);">'+
+    '<td>Total</td><td class="num tabular">'+fmt(totalDividendesAll())+'</td><td></td></tr>';
+  return '<div class="total-strip"><span class="label">Total dividendes reçus</span>'+
+    '<span class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus sur les titres que tu détenais à chaque date de détachement.">'+fmt(totalDividendesAll())+'</span></div>'+
+    (nbSuggestions ? '<div class="helper" style="background:var(--gold-soft);border-radius:9px;padding:10px 12px;margin-bottom:6px;">'+
+      nbSuggestions+' dividende(s) trouvé(s) automatiquement pour tes titres, pas encore validés. Appuie sur une carte marquée « suggéré » pour vérifier et enregistrer une par une, ou '+
+      (nbSuggestions>1 ? '<button type="button" class="inline-add" data-validate-all-div="1" style="margin-top:6px;">Tout valider ('+nbSuggestions+')</button>' : 'valide-la directement.')+
+      '</div>' : '')+
+    (rows || '<div class="section-title">Détail par année</div><div class="empty">Aucun dividende enregistré</div>')+
+    '<div class="section-title">Totaux par année</div>'+
+    yearCardsHtml+
+    '<div class="helper">La "Rémunération mensuelle" est le total des dividendes de l\'année divisé par 12 — une moyenne indicative, pas un versement réel mensuel.</div>'+
+    '<div class="section-title">Total par titre (depuis le début)</div>'+
+    '<div class="card"><table class="mini"><tr><th>Titre</th><th style="text-align:right">Total dividendes</th>'+
+    '<th style="text-align:right">Rendement réel</th></tr>'+
+    titreRows+titreTotalRow+'</table></div>'+
+    '<div class="helper">Le "Rendement réel" rapporte les dividendes reçus depuis le début à ton prix d\'achat (CUMP) sur ce que tu détiens encore — pas au cours actuel. Affiché uniquement si tu détiens encore le titre.</div>'+
+    (byTitre.length ?
+      vBarChartMagnitude(byTitre.map(function(t){ return {label:t.titre, value:t.total}; })) : '')+
+    (byYear.length ?
+      '<div class="section-title">Évolution des dividendes</div>'+
+      vBarChartMagnitude(byYear.map(function(y){ return {label:String(y.annee), value:y.total}; }))
+      : '')+
+    '<div class="helper">Le nombre de titres retenu se recalcule à chaque date de détachement à partir de tes achats — un achat futur n\'affecte jamais une année déjà passée.</div>';
+}
+
+function renderLiquidite(){
+  var rows = collapsibleRows('mouvements', state.mouvements.slice().sort(byDate).map(function(m){
+    var neg = Number(m.montant) < 0;
+    return '<div class="card" data-open="mouvements" data-id="'+m.id+'">'+
+      '<div class="row1"><span class="titre">'+esc(m.libelle||m.type)+'</span>'+
+      '<span class="montant '+(neg?'neg':'pos')+' tabular">'+fmt(m.montant)+'</span></div>'+
+      '<div class="meta">'+esc(m.type)+(m.titre?(' · '+esc(m.titre)):'')+
+      ' · '+esc(fmtDate(m.date))+'</div></div>';
+  }));
+  var lr = state.liquiditeReelle;
+  var parAnnee = fraisAutresParAnnee();
+  var parAnneeRows = parAnnee.map(function(y){
+    return '<tr><td>'+y.annee+'</td><td class="num tabular">'+fmt(y.frais)+'</td>'+
+      '<td class="num tabular">'+fmt(y.autres)+'</td></tr>';
+  }).join('');
+  return '<div class="metric-grid">'+
+    '<div class="metric"><div class="label">Total dividendes</div><div class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus, identique à celle de l\'onglet Dividendes.">'+fmt(totalDividendesAll())+'</div></div>'+
+    '<div class="metric"><div class="label">Total ventes</div><div class="value tabular" data-exact="'+esc(fmtFull(totalVentes()))+'" data-desc="Somme encaissée sur tes ventes de titres (quantité × prix de vente).">'+fmt(totalVentes())+'</div></div>'+
+    '<div class="metric"><div class="label">Total frais</div><div class="value tabular" data-exact="'+esc(fmtFull(totalFrais()))+'" data-desc="Somme des mouvements de type Frais, toujours comptés en sortie.">'+fmt(totalFrais())+'</div></div>'+
+    '<div class="metric"><div class="label">Autres mouvements</div><div class="value tabular" data-exact="'+esc(fmtFull(totalAutres()))+'" data-desc="Somme des mouvements de type Autre, toujours comptés en entrée.">'+fmt(totalAutres())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Liquidité théorique</div><div class="value tabular" data-exact="'+esc(fmtFull(liquiditeTheorique()))+'" data-desc="Fonds versés moins investi en titres, plus dividendes, frais, autres mouvements et ventes.">'+fmt(liquiditeTheorique())+'</div></div>'+
+    '</div>'+
+    '<div class="card" data-open="liquidite-reelle" data-id="liquidite-reelle">'+
+    '<div class="row1"><span class="titre">Liquidité réelle actuelle</span>'+
+    '<span class="montant tabular">'+fmt(lr.montant)+'</span></div>'+
+    '<div class="meta">Mise à jour le '+esc(lr.date||'—')+' — appuie pour modifier</div></div>'+
+    '<div class="section-title">Frais &amp; autres mouvements</div>'+
+    (rows || '<div class="empty">Aucun frais ni autre mouvement saisi</div>')+
+    (parAnnee.length ?
+      '<div class="section-title">Frais &amp; autres par année</div>'+
+      '<div class="card"><table class="mini"><tr><th>Année</th><th style="text-align:right">Frais</th>'+
+      '<th style="text-align:right">Autres</th></tr>'+parAnneeRows+'</table></div>'+
+      '<div class="section-title">Frais liés au compte</div>'+
+      '<div class="card"><div class="row1"><span class="titre">Total des frais</span>'+
+      '<span class="montant tabular" data-exact="'+esc(fmtFull(totalFrais()))+'" data-desc="Somme des mouvements de type Frais liés au compte (hors frais de virement).">'+fmt(totalFrais())+'</span></div></div>'+
+      '<div class="section-title">Évolution des frais</div>'+
+      vBarChartMagnitude(parAnnee.map(function(y){ return {label:String(y.annee), value:y.frais}; }), {color:'var(--brick)'})+
+      (parAnnee.some(function(y){return y.autres;}) ?
+        '<div class="section-title">Évolution des autres mouvements</div>'+
+        vBarChartMagnitude(parAnnee.map(function(y){ return {label:String(y.annee), value:y.autres}; })) : '')
+      : '')+
+    '<div class="helper">Renseigne l\'année sur chaque frais/autre mouvement pour le voir apparaître dans la table par année. '+
+    'Les dividendes et les ventes n\'apparaissent pas ici en saisie : ils viennent automatiquement des onglets Dividendes et Titres.</div>';
+}
+function valeurGlobaleCompte(){
+  return Number(state.liquiditeReelle.montant||0) + valeurMarchandeTotal();
+}
+function renderSynthese(){
+  var e = ecart();
+  var pv = plusValueTotal();
+  var valMarch = valeurMarchandeTotal();
+  var pvLatente = plusValueLatenteTotal();
+  var perf = performanceGlobale();
+  var coursOk = toutCoursRenseignes();
+  return '<div class="metric-grid">'+
+    '<div class="metric"><div class="label">Total des fonds versés</div><div class="value tabular" data-exact="'+esc(fmtFull(total1()))+'" data-desc="Somme de tous tes versements sur le compte, hors frais de virement bancaire.">'+fmt(total1())+'</div></div>'+
+    '<div class="metric"><div class="label">Total investi en titres (brut)</div><div class="value tabular" data-exact="'+esc(fmtFull(total2()))+'" data-desc="Somme de (prix d\'achat moyen pondéré × quantité) pour chaque titre, avant toute vente.">'+fmt(total2())+'</div></div>'+
+    '<div class="metric"><div class="label">Total dividendes reçus</div><div class="value tabular" data-exact="'+esc(fmtFull(totalDividendesAll()))+'" data-desc="Somme des dividendes reçus sur les titres que tu détenais à chaque date de détachement.">'+fmt(totalDividendesAll())+'</div></div>'+
+    '<div class="metric"><div class="label">Total ventes d\'actions</div><div class="value tabular" data-exact="'+esc(fmtFull(totalVentes()))+'" data-desc="Somme encaissée sur tes ventes de titres (quantité × prix de vente).">'+fmt(totalVentes())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Plus/moins-value réalisée</div><div class="value tabular" data-exact="'+esc(fmtFull(pv))+'" data-desc="Différence entre le prix de vente et le CUMP au moment de la vente, sur toutes tes ventes." style="color:'+(pv>=0?'var(--good)':'var(--bad)')+'">'+fmt(pv)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Valeur actuelle du portefeuille'+(coursOk?'':' <span style="font-weight:400;opacity:.6;">(cours partiels)</span>')+'</div><div class="value tabular" data-exact="'+esc(fmtFull(valMarch))+'" data-desc="Pour chaque titre détenu : quantité × cours actuel (ou CUMP si aucun cours n\'est renseigné), puis somme.">'+fmt(valMarch)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Plus/moins-value latente</div><div class="value tabular" data-exact="'+esc(fmtFull(pvLatente))+'" data-desc="Différence entre le cours actuel et le CUMP, sur les titres que tu détiens encore." style="color:'+(pvLatente>=0?'var(--good)':'var(--bad)')+'">'+fmt(pvLatente)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Performance globale</div><div class="value tabular" style="color:'+(perf>=0?'var(--good)':'var(--bad)')+'">'+fmtPct(perf)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Liquidité théorique</div><div class="value tabular" data-exact="'+esc(fmtFull(liquiditeTheorique()))+'" data-desc="Fonds versés moins investi en titres, plus dividendes, frais, autres mouvements et ventes.">'+fmt(liquiditeTheorique())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Liquidité réelle actuelle</div><div class="value tabular" data-exact="'+esc(fmtFull(state.liquiditeReelle.montant))+'" data-desc="Le montant que tu actualises toi-même, d\'après ton relevé de compte réel.">'+fmt(state.liquiditeReelle.montant)+'</div></div>'+
+    '<div class="metric wide"><div class="label">Valeur globale du compte (liquidité réelle + portefeuille)</div><div class="value tabular" data-exact="'+esc(fmtFull(valeurGlobaleCompte()))+'" data-desc="Liquidité réelle + valeur actuelle du portefeuille : ce que vaut ton compte aujourd\'hui.">'+fmt(valeurGlobaleCompte())+'</div></div>'+
+    '<div class="metric wide"><div class="label">Écart</div><div class="value tabular" data-exact="'+esc(fmtFull(e))+'" data-desc="Différence entre la liquidité réelle et la liquidité théorique — un écart signale un mouvement non saisi." style="color:'+(Math.abs(e)<1?'var(--good)':'var(--bad)')+'">'+fmt(e)+'</div></div>'+
+    '</div>'+
+    '<div class="section-title">Sauvegarde</div>'+
+    '<div class="card">'+
+    '<div class="helper" style="margin:0 0 12px;">Tes données sont stockées uniquement sur cet appareil. '+
+    'Exporte régulièrement une sauvegarde, et utilise-la pour transférer tes données vers un autre appareil.</div>'+
+    '<div class="sheet-actions" style="margin:0 0 8px;">'+
+    '<button class="btn primary" id="btn-export-xlsx">Exporter en Excel</button>'+
+    '</div>'+
+    '<div class="sheet-actions" style="margin:0;">'+
+    '<button class="btn ghost" id="btn-export">Exporter (.json)</button>'+
+    '<button class="btn ghost" id="btn-import">Importer</button>'+
+    '</div>'+
+    '<input type="file" id="file-import" accept="application/json" style="display:none;">'+
+    '</div>'+
+    (FIREBASE_CONFIGURED ? (
+      '<div class="section-title">Synchronisation</div>'+
+      '<div class="card">'+
+      '<div class="helper" style="margin:0 0 12px;">Tes données sont synchronisées entre tes appareils via ton compte.</div>'+
+      '<button class="btn danger" id="btn-signout">Se déconnecter</button>'+
+      '</div>'
+    ) : '');
+}
+
+var LISTE_LABELS = {
+  operations: 'Versement', achats: 'Achat', ventes: 'Vente', dividendes: 'Dividende', mouvements: 'Mouvement'
+};
+function describeItem(listName, item){
+  if(listName==='operations') return {titre: item.libelle, montant: Number(item.montant||0)};
+  if(listName==='achats') return {titre: item.titre, montant: Number(item.cump||0)*Number(item.qte||0)};
+  if(listName==='ventes') return {titre: item.titre, montant: Number(item.qte||0)*Number(item.prixVente||0)};
+  if(listName==='dividendes') return {titre: item.titre+' · '+item.annee, montant: item.dividendeParAction+'/action'};
+  if(listName==='mouvements') return {titre: item.libelle||item.type, montant: item.montant};
+  return {titre:'—', montant:''};
+}
+function renderCorbeille(){
+  if(!state.corbeille.length){
+    return '<div class="empty">La corbeille est vide — les éléments supprimés apparaissent ici et restent récupérables.</div>';
+  }
+  var rows = state.corbeille.map(function(entry){
+    var d = describeItem(entry.listName, entry.item);
+    var when = entry.deletedAt ? new Date(entry.deletedAt).toLocaleString('fr-FR') : '';
+    return '<div class="card">'+
+      '<div class="row1"><span class="titre">'+esc(d.titre)+'</span>'+
+      '<span class="montant tabular">'+(typeof d.montant==='number'?fmt(d.montant):esc(d.montant))+'</span></div>'+
+      '<div class="meta">'+esc(LISTE_LABELS[entry.listName]||'')+' · supprimé le '+esc(when)+'</div>'+
+      '<div class="sheet-actions" style="margin-top:10px;">'+
+      '<button class="btn ghost" data-restore="'+entry.id+'">Restaurer</button>'+
+      '<button class="btn danger" data-purge="'+entry.id+'">Supprimer définitivement</button>'+
+      '</div></div>';
+  }).join('');
+  return '<div class="helper">Éléments supprimés — restaure-les ou vide la corbeille définitivement.</div>'+rows;
+}
+
+var RENDERERS = {
+  operations: renderOperations,
+  portefeuille: renderPortefeuille,
+  dividendes: renderDividendes,
+  liquidite: renderLiquidite,
+  synthese: renderSynthese,
+  corbeille: renderCorbeille
+};
+
+function render(){
+  renderTopbar();
+  document.getElementById('app').innerHTML = RENDERERS[currentTab]();
+  var fab = document.getElementById('fab');
+  fab.style.display = FAB_MAP[currentTab] ? '' : 'none';
+}
+
+/* ---------- tabs ---------- */
+document.getElementById('tabs').addEventListener('click', function(e){
+  var btn = e.target.closest('button[data-tab]');
+  if(!btn) return;
+  currentTab = btn.dataset.tab;
+  Array.from(document.querySelectorAll('#tabs button')).forEach(function(b){
+    b.classList.toggle('active', b===btn);
+  });
+  render();
+});
+
+/* ---------- form sheet ---------- */
+var overlay = document.getElementById('overlay');
+var sheetEl = document.getElementById('sheet');
+
+function closeSheet(){ overlay.classList.remove('show'); sheetEl.innerHTML=''; }
+overlay.addEventListener('click', function(e){ if(e.target===overlay) closeSheet(); });
+
+function openSheet(html){
+  sheetEl.innerHTML = html;
+  overlay.classList.add('show');
+}
+function showExact(text, desc){
+  openSheet('<h3>Montant exact</h3>'+
+    '<div style="font-size:1.15rem;font-weight:700;font-family:\'Source Serif 4\',serif;margin-bottom:'+(desc?'10px':'18px')+';">'+esc(text)+'</div>'+
+    (desc ? '<div class="helper" style="margin:0 0 16px;">'+esc(desc)+'</div>' : '')+
+    '<div class="sheet-actions"><button class="btn primary" id="btn-close-exact">Fermer</button></div>');
+  document.getElementById('btn-close-exact').onclick = closeSheet;
+}
+
+
+var FORMS = {
+  operations: function(item){
+    item = item || {libelle:'',date:todayISO(),montant:'',frais:0};
+    return {
+      title: item.id ? 'Modifier le versement' : 'Nouveau versement',
+      body:
+        '<div class="field"><label>Libellé</label><input id="f-libelle" value="'+esc(item.libelle)+'"></div>'+
+        '<div class="field"><label>Date</label><input id="f-date" type="date" value="'+esc(dateToISO(item.date))+'"></div>'+
+        '<div class="field-row">'+
+        '<div class="field"><label>Montant (F CFA)</label><input id="f-montant" type="number" step="0.01" value="'+item.montant+'"></div>'+
+        '<div class="field"><label>Frais (F CFA)</label><input id="f-frais" type="number" step="0.01" value="'+(item.frais||0)+'"></div>'+
+        '</div>',
+      validate: function(){
+        if(!document.getElementById('f-libelle').value.trim()) return 'Indique un libellé.';
+        if(!document.getElementById('f-date').value) return 'La date est obligatoire.';
+        return '';
+      },
+      save: function(){
+        return {
+          libelle: document.getElementById('f-libelle').value.trim(),
+          date: document.getElementById('f-date').value,
+          montant: parseFloat(document.getElementById('f-montant').value)||0,
+          frais: parseFloat(document.getElementById('f-frais').value)||0
+        };
+      },
+      list: 'operations'
+    };
+  },
+  achats: function(item){
+    item = item || {titre:'',cump:'',qte:'',date:todayISO()};
+    return {
+      title: item.id ? 'Modifier l\'achat' : 'Nouvel achat',
+      body:
+        '<div class="field"><label>Titre (action ou code BRVM)</label><input id="f-titre" list="titres-list" value="'+esc(item.titre)+'" placeholder="ex: CBI BF ou SGBC"></div>'+titreDatalist()+
+        '<div class="field-row">'+
+        '<div class="field"><label>Prix d\'achat unitaire (F CFA)</label><input id="f-cump" type="number" step="0.01" value="'+item.cump+'"></div>'+
+        '<div class="field"><label>Nombre de titres</label><input id="f-qte" type="number" step="1" value="'+item.qte+'"></div>'+
+        '</div>'+
+        '<div class="field"><label>Date d\'achat</label><input id="f-date" type="date" value="'+esc(item.date)+'"></div>'+
+        '<div class="helper">Le CUMP du titre est recalculé automatiquement (moyenne pondérée de tous tes achats). La date sert à savoir quels dividendes tu as le droit de toucher.</div>',
+      validate: function(){
+        if(!document.getElementById('f-titre').value.trim()) return 'Indique le titre.';
+        if(!(parseFloat(document.getElementById('f-qte').value) > 0)) return 'Indique un nombre de titres supérieur à 0.';
+        if(!(parseFloat(document.getElementById('f-cump').value) > 0)) return 'Indique le prix d\'achat.';
+        if(!document.getElementById('f-date').value) return 'La date d\'achat est obligatoire.';
+        return '';
+      },
+      save: function(){
+        return {
+          titre: canonicalTitre(document.getElementById('f-titre').value),
+          cump: parseFloat(document.getElementById('f-cump').value)||0,
+          qte: parseFloat(document.getElementById('f-qte').value)||0,
+          date: document.getElementById('f-date').value
+        };
+      },
+      list: 'achats'
+    };
+  },
+  ventes: function(item){
+    item = item || {titre:'',qte:'',prixVente:'',date:todayISO()};
+    return {
+      title: item.id ? 'Modifier la vente' : 'Nouvelle vente',
+      body:
+        '<div class="field"><label>Titre (action)</label><input id="f-titre" list="titres-list" value="'+esc(item.titre)+'" placeholder="ex: CBI BF"></div>'+titreDatalist()+
+        '<div class="field-row">'+
+        '<div class="field"><label>Nombre de titres vendus</label><input id="f-qte" type="number" step="1" value="'+item.qte+'"></div>'+
+        '<div class="field"><label>Prix de vente unitaire</label><input id="f-prix" type="number" step="0.01" value="'+item.prixVente+'"></div>'+
+        '</div>'+
+        '<div class="field"><label>Date de vente</label><input id="f-date" type="date" value="'+esc(item.date)+'"></div>'+
+        '<div class="helper">La plus/moins-value est calculée par rapport au CUMP du titre à la date de la vente.</div>',
+      validate: function(){
+        if(!document.getElementById('f-titre').value.trim()) return 'Indique le titre.';
+        if(!(parseFloat(document.getElementById('f-qte').value) > 0)) return 'Indique un nombre de titres supérieur à 0.';
+        if(!(parseFloat(document.getElementById('f-prix').value) > 0)) return 'Indique le prix de vente.';
+        if(!document.getElementById('f-date').value) return 'La date de vente est obligatoire.';
+        return '';
+      },
+      save: function(){
+        return {
+          titre: canonicalTitre(document.getElementById('f-titre').value),
+          qte: parseFloat(document.getElementById('f-qte').value)||0,
+          prixVente: parseFloat(document.getElementById('f-prix').value)||0,
+          date: document.getElementById('f-date').value
+        };
+      },
+      list: 'ventes'
+    };
+  },
+  dividendes: function(item){
+    item = item || {titre:'',annee:new Date().getFullYear(),dateDetachement:'',dividendeParAction:'',exercice:''};
+    var ecart = item.id ? ecartAutoPourLigne(item) : null;
+    var ecartLine = ecart
+      ? ('<div class="helper" style="margin-bottom:10px;">La BRVM indique : <strong>'+fmtFull(ecart.montant)+'</strong>/action, détaché le <strong>'+esc(fmtDate(ecart.dateExDividende))+'</strong>'+(ecart.exercice!=null?' (exercice '+ecart.exercice+')':'')+'. '+
+         '<button type="button" id="btn-use-auto-div" class="inline-add" style="margin-left:6px;">Corriger avec ces valeurs</button></div>')
+      : '';
+    return {
+      title: item.id ? 'Modifier le dividende' : 'Nouveau dividende',
+      body:
+        ecartLine+
+        '<div class="field"><label>Titre (action)</label><input id="f-titre" list="titres-list" value="'+esc(item.titre)+'" placeholder="ex: CBI BF"></div>'+titreDatalist()+
+        '<div class="field-row">'+
+        '<div class="field"><label>Année de perception</label><input id="f-annee" type="number" step="1" value="'+item.annee+'"></div>'+
+        '<div class="field"><label>Exercice comptable</label><input id="f-exercice" type="number" step="1" value="'+(item.exercice!=null?item.exercice:'')+'" placeholder="optionnel"></div>'+
+        '</div>'+
+        '<div class="field-row">'+
+        '<div class="field"><label>Dividende / action</label><input id="f-div" type="number" step="0.01" value="'+item.dividendeParAction+'"></div>'+
+        '<div class="field"><label>Date de détachement</label><input id="f-dd" type="date" value="'+esc(item.dateDetachement||'')+'"></div>'+
+        '</div>'+
+        '<div class="helper">L\'« année de perception » (celle utilisée pour grouper et pour tes totaux) est l\'année où tu touches le dividende — déduis-la de la date de détachement si tu la changes. L\'« exercice comptable » est optionnel : c\'est l\'année sur laquelle l\'entreprise a calculé ce dividende (souvent l\'année précédente).</div>'+
+        (ecart ? '<div class="helper">⚠ Si tu corriges la date de détachement, vérifie que l\'année de perception ci-dessus lui correspond toujours.</div>' : ''),
+      save: function(){
+        var exVal = document.getElementById('f-exercice').value;
+        return {
+          titre: canonicalTitre(document.getElementById('f-titre').value),
+          annee: parseInt(document.getElementById('f-annee').value)||new Date().getFullYear(),
+          dividendeParAction: parseFloat(document.getElementById('f-div').value)||0,
+          dateDetachement: document.getElementById('f-dd').value || null,
+          exercice: exVal!=='' ? parseInt(exVal) : null
+        };
+      },
+      list: 'dividendes'
+    };
+  },
+  mouvements: function(item){
+    item = item || {type:'Frais',titre:'',libelle:'',montant:'',date:todayISO(),annee:null};
+    return {
+      title: item.id ? 'Modifier le mouvement' : 'Nouveau mouvement (frais / autre)',
+      body:
+        '<div class="field"><label>Type</label><select id="f-type">'+
+        ['Frais','Autre'].map(function(t){return '<option value="'+t+'"'+(item.type===t?' selected':'')+'>'+t+'</option>';}).join('')+
+        '</select></div>'+
+        '<div class="field"><label>Libellé</label><input id="f-libelle" value="'+esc(item.libelle)+'" placeholder="ex: Frais de tenue de compte"></div>'+
+        '<div class="field"><label>Titre concerné (optionnel)</label><input id="f-titre-m" value="'+esc(item.titre||'')+'"></div>'+
+        '<div class="field-row">'+
+        '<div class="field"><label>Montant (F CFA)</label><input id="f-montant" type="number" step="0.01" min="0" value="'+Math.abs(Number(item.montant)||0)+'"></div>'+
+        '<div class="field"><label>Date</label><input id="f-date" type="date" value="'+esc(dateToISO(item.date))+'"></div>'+
+        '</div>'+
+        '<div class="helper">Saisis toujours un montant positif : un frais est automatiquement compté comme une sortie, un mouvement "Autre" comme une entrée. L\'année utilisée pour les totaux par année se déduit automatiquement de la date.</div>',
+      validate: function(){
+        if(!(parseFloat(document.getElementById('f-montant').value) > 0)) return 'Indique un montant supérieur à 0.';
+        if(!document.getElementById('f-date').value) return 'La date est obligatoire.';
+        return '';
+      },
+      save: function(){
+        var type = document.getElementById('f-type').value;
+        var montantAbs = Math.abs(parseFloat(document.getElementById('f-montant').value)||0);
+        var dateVal = document.getElementById('f-date').value;
+        return {
+          type: type,
+          libelle: document.getElementById('f-libelle').value.trim(),
+          titre: document.getElementById('f-titre-m').value.trim(),
+          montant: type === 'Frais' ? -montantAbs : montantAbs,
+          annee: dateVal ? parseInt(dateVal.slice(0,4)) : null,
+          date: document.getElementById('f-date').value.trim()
+        };
+      },
+      list: 'mouvements'
+    };
+  },
+  cours: function(item, titre){
+    var hasManual = !!item;
+    item = item || {cours:'', date:''};
+    var auto = autoInfoOf(titre);
+    var autoLine = auto
+      ? ('<div class="helper" style="margin-bottom:10px;">Cours automatique disponible : <strong>'+fmt(auto.cours)+'</strong> ('+esc(auto.date||'')+').'+
+         (hasManual ? ' <button type="button" id="btn-use-auto" class="inline-add" style="margin-left:6px;">Utiliser ce cours</button>' : '')+
+         '</div>')
+      : '<div class="helper" style="margin-bottom:10px;">Pas encore de cours automatique disponible pour ce titre.</div>';
+    return {
+      title: 'Cours actuel — '+titre,
+      body:
+        autoLine+
+        '<div class="field"><label>Cours manuel (F CFA)</label><input id="f-cours" type="number" step="0.01" value="'+(item.cours!=null?item.cours:'')+'" placeholder="ex: 12500"></div>'+
+        '<div class="field"><label>Date du cours</label><input id="f-date" value="'+esc(item.date||'')+'" placeholder="jj/mm/aaaa"></div>'+
+        '<div class="helper">Un cours saisi ici prend toujours le pas sur le cours automatique. Laisse vide et enregistre pour repasser en automatique.</div>',
+      save: function(){
+        var raw = document.getElementById('f-cours').value.trim();
+        if(raw === '') return null;
+        return {
+          cours: parseFloat(raw)||0,
+          date: document.getElementById('f-date').value.trim()
+        };
+      }
+    };
+  },
+  'liquidite-reelle': function(){
+    var lr = state.liquiditeReelle;
+    return {
+      title: 'Mettre à jour la liquidité réelle',
+      body:
+        '<div class="field"><label>Montant (F CFA)</label><input id="f-montant" type="number" step="0.01" value="'+lr.montant+'"></div>'+
+        '<div class="field"><label>Date</label><input id="f-date" value="'+esc(lr.date||'')+'" placeholder="jj/mm/aaaa"></div>',
+      save: function(){
+        return {
+          montant: parseFloat(document.getElementById('f-montant').value)||0,
+          date: document.getElementById('f-date').value.trim()
+        };
+      },
+      isSingleton: true
+    };
+  }
+};
+
+function buildSheetHtml(kind, item, formDef){
+  var actions = '<div class="sheet-actions">'+
+    '<button class="btn ghost" id="btn-cancel">Annuler</button>'+
+    (item && item.id ? '<button class="btn danger" id="btn-delete">Supprimer</button>' : '')+
+    '<button class="btn primary" id="btn-save">Enregistrer</button>'+
+    '</div>';
+  return '<h3>'+formDef.title+'</h3>'+formDef.body+'<div id="form-error" class="helper" style="color:var(--bad);margin:8px 0 0;"></div>'+actions;
+}
+
+function openValidateAllSheet(){
+  var sugg = autoDividendesSuggeres();
+  if(!sugg.length) return;
+  var listHtml = sugg.map(function(s, i){
+    return '<div class="card" style="margin-bottom:8px;">'+
+      '<div class="row1"><span class="titre">'+esc(s.titre)+'</span></div>'+
+      '<div class="meta" style="margin-bottom:8px;">'+(s.exercice!=null?'Exercice '+s.exercice+' · ':'')+'suggéré pour '+s.annee+'</div>'+
+      '<div class="field-row">'+
+      '<div class="field"><label>Dividende / action</label><input id="val-montant-'+i+'" type="number" step="0.01" value="'+s.dividendeParAction+'"></div>'+
+      '<div class="field"><label>Date de détachement</label><input id="val-date-'+i+'" type="date" value="'+esc(s.dateDetachement||'')+'"></div>'+
+      '</div></div>';
+  }).join('');
+  openSheet('<h3>Valider '+sugg.length+' dividende(s)</h3>'+
+    '<div class="helper" style="margin-bottom:10px;">Vérifie — et corrige si besoin — chaque montant ou date avant de confirmer. Chaque ligne deviendra un nouvel enregistrement.</div>'+
+    listHtml+
+    '<div class="sheet-actions">'+
+    '<button class="btn ghost" id="btn-cancel-validate-all">Annuler</button>'+
+    '<button class="btn primary" id="btn-confirm-validate-all">Confirmer l\'ajout</button>'+
+    '</div>');
+  document.getElementById('btn-cancel-validate-all').onclick = closeSheet;
+  document.getElementById('btn-confirm-validate-all').onclick = function(){
+    sugg.forEach(function(s, i){
+      var montantInput = document.getElementById('val-montant-'+i);
+      var dateInput = document.getElementById('val-date-'+i);
+      var montant = parseFloat(montantInput.value);
+      if(isNaN(montant)) montant = s.dividendeParAction;
+      var dateVal = dateInput.value || s.dateDetachement;
+      var annee = dateVal ? parseInt(sortableDate(dateVal).slice(0,4)) : s.annee;
+      state.dividendes.push({
+        id: uid(),
+        titre: s.titre,
+        annee: annee,
+        dateDetachement: dateVal,
+        dividendeParAction: montant,
+        exercice: s.exercice!=null ? s.exercice : null
+      });
+    });
+    closeSheet(); render(); scheduleSave();
+  };
+}
+function openForm(kind, id){
+  var item = null;
+  var prefill = null;
+  if(kind === 'cours'){
+    item = state.coursActuels[id] || null;
+    prefill = item;
+  } else if(kind === 'dividendes' && id && String(id).indexOf('auto-')===0){
+    var sugg = autoDividendesSuggeres().find(function(x){return x.id===id;});
+    prefill = sugg ? {titre:sugg.titre, annee:sugg.annee, dateDetachement:sugg.dateDetachement, dividendeParAction:sugg.dividendeParAction, exercice:sugg.exercice} : null;
+    item = null; id = null; // l'acceptation cree une nouvelle ligne manuelle, elle ne modifie pas l'auto
+  } else if(kind !== 'liquidite-reelle' && id){
+    item = state[formDef_list(kind)].find(function(x){return x.id===id;});
+    prefill = item;
+  }
+  var formDef = FORMS[kind](prefill, id);
+  openSheet(buildSheetHtml(kind, item, formDef));
+  document.getElementById('btn-cancel').onclick = closeSheet;
+  var useAutoBtn = document.getElementById('btn-use-auto');
+  if(useAutoBtn){
+    useAutoBtn.onclick = function(){
+      delete state.coursActuels[id];
+      closeSheet(); render(); scheduleSave();
+    };
+  }
+  var useAutoDivBtn = document.getElementById('btn-use-auto-div');
+  if(useAutoDivBtn && kind === 'dividendes'){
+    useAutoDivBtn.onclick = function(){
+      var ecart = ecartAutoPourLigne(item);
+      if(!ecart) return;
+      document.getElementById('f-div').value = ecart.montant;
+      document.getElementById('f-dd').value = ecart.dateExDividende || '';
+      var annee = anneeFromDate(ecart.dateExDividende, ecart.exercice);
+      if(annee) document.getElementById('f-annee').value = annee;
+      if(ecart.exercice!=null) document.getElementById('f-exercice').value = ecart.exercice;
+    };
+  }
+  var delBtn = document.getElementById('btn-delete');
+  if(delBtn){
+    delBtn.onclick = function(){
+      if(!delBtn.classList.contains('confirming')){
+        delBtn.classList.add('confirming');
+        delBtn.textContent = 'Confirmer la suppression ?';
+        return;
+      }
+      var listName = formDef.list;
+      var idx = state[listName].findIndex(function(x){return x.id===id;});
+      if(idx > -1){
+        var removed = state[listName].splice(idx,1)[0];
+        state.corbeille.unshift({
+          id: uid(), listName: listName, item: removed,
+          deletedAt: new Date().toISOString()
+        });
+      }
+      closeSheet(); render(); scheduleSave();
+    };
+  }
+  document.getElementById('btn-save').onclick = function(){
+    if(formDef.validate){
+      var err = formDef.validate();
+      if(err){ document.getElementById('form-error').textContent = err; return; }
+    }
+    var data = formDef.save();
+    if(kind === 'liquidite-reelle'){
+      state.liquiditeReelle = data;
+    } else if(kind === 'cours'){
+      if(data === null){ delete state.coursActuels[id]; }
+      else { state.coursActuels[id] = data; }
+    } else {
+      var listName = formDef.list;
+      if(item){
+        Object.assign(item, data);
+      } else {
+        data.id = uid();
+        state[listName].push(data);
+      }
+    }
+    closeSheet(); render(); scheduleSave();
+  };
+}
+function formDef_list(kind){
+  return kind === 'mouvements' ? 'mouvements' :
+         kind === 'dividendes' ? 'dividendes' :
+         kind === 'ventes' ? 'ventes' :
+         kind === 'achats' ? 'achats' : 'operations';
+}
+
+document.getElementById('app').addEventListener('change', function(e){
+  if(e.target.id === 'file-import'){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var imported = JSON.parse(reader.result);
+        if(!imported || !imported.operations) throw new Error('format invalide');
+        state = imported;
+        if(!state.corbeille) state.corbeille = [];
+        if(!state.ventes) state.ventes = [];
+        if(!state.coursActuels) state.coursActuels = {};
+        render(); scheduleSave();
+      }catch(err){
+        alert('Fichier invalide — impossible d\'importer ces données.');
+      }
+    };
+    reader.readAsText(file);
+  }
+});
+
+/* ---------- Génération du classeur Excel (miroir du fichier .xlsx original) ---------- */
+// Construit un classeur Excel (via ExcelJS) reproduisant la structure du fichier
+// "Bilan du compte titre BRVM" a partir de l'etat de l'app (state).
+// Fonctionne identiquement en Node (test) et dans le navigateur (ExcelJS UMD).
+function buildWorkbook(ExcelJSLib, state){
+  var CUR = '#,##0.00 "F CFA"';
+  var PCT = '0.00%';
+  var DATEFMT = 'dd/mm/yyyy';
+  var NAVY = 'FF1F4E78', NAVY2='FF2E75B6', SUBHEAD='FFBDD7EE', TOTALFILL='FFD9E1F2';
+
+  var wb = new ExcelJSLib.Workbook();
+  wb.creator = 'Compte Titre BRVM';
+  wb.created = new Date();
+
+  var ws = wb.addWorksheet('Bilan');
+  ws.columns = [
+    {width:5},{width:26},{width:16},{width:16},{width:16},{width:18},{width:14}
+  ];
+
+  function titleRow(r, text, lastCol){
+    ws.mergeCells(r,1,r,lastCol||6);
+    var c = ws.getCell(r,1);
+    c.value = text;
+    c.font = {bold:true, size:12, color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY2}};
+    c.alignment = {horizontal:'center'};
+  }
+  function subheadRow(r, text, lastCol){
+    ws.mergeCells(r,1,r,lastCol||7);
+    var c = ws.getCell(r,1);
+    c.value = text;
+    c.font = {bold:true, size:10, color:{argb:NAVY}};
+    c.fill = {type:'pattern', pattern:'solid', fgColor:{argb:SUBHEAD}};
+    c.alignment = {horizontal:'center'};
+  }
+  function headerRow(r, headers){
+    headers.forEach(function(h, i){
+      var c = ws.getCell(r, i+1);
+      c.value = h;
+      c.font = {bold:true, size:11, color:{argb:'FFFFFFFF'}};
+      c.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+      c.alignment = {horizontal:'center', wrapText:true};
+      c.border = thinBorder();
+    });
+  }
+  function thinBorder(){
+    var s = {style:'thin', color:{argb:'FFB7B7B7'}};
+    return {top:s,bottom:s,left:s,right:s};
+  }
+  function borderRow(r, ncols){
+    for(var c=1;c<=ncols;c++) ws.getCell(r,c).border = thinBorder();
+  }
+  function inputCell(r,c,val,fmt,sheet){
+    var cell = (sheet||ws).getCell(r,c);
+    cell.value = val;
+    cell.font = {color:{argb:'FF0000FF'}};
+    if(fmt) cell.numFmt = fmt;
+    return cell;
+  }
+  function formulaCell(r,c,formula,fmt,sheet){
+    var cell = (sheet||ws).getCell(r,c);
+    cell.value = {formula: formula};
+    if(fmt) cell.numFmt = fmt;
+    return cell;
+  }
+  function totalFillCell(r,c){
+    ws.getCell(r,c).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  }
+
+  var row = 1;
+  ws.mergeCells(1,1,1,7);
+  ws.getCell(1,1).value = 'BILAN DU COMPTE TITRE BRVM';
+  ws.getCell(1,1).font = {bold:true, size:14, color:{argb:NAVY}};
+  ws.getCell(1,1).alignment = {horizontal:'center'};
+
+  // ===== SECTION 1: OPERATIONS =====
+  row = 3;
+  titleRow(row, 'BILAN DES OPÉRATIONS', 6);
+  row++;
+  headerRow(row, ['N°','Libellé','Date','Montant net','Frais de virement','']);
+  var startOps = row+1;
+  state.operations.forEach(function(o, idx){
+    var r = startOps + idx;
+    ws.getCell(r,1).value = idx+1;
+    ws.getCell(r,2).value = o.libelle;
+    ws.getCell(r,3).value = o.date;
+    inputCell(r,4,Number(o.montant)||0,CUR);
+    inputCell(r,5,Number(o.frais)||0,CUR);
+    borderRow(r,5);
+  });
+  var lastOps = startOps + state.operations.length - 1;
+  var total1Row = lastOps+1;
+  ws.mergeCells(total1Row,1,total1Row,3);
+  ws.getCell(total1Row,1).value = 'Total 1 – Total des fonds versés (net, hors frais de virement)';
+  ws.getCell(total1Row,1).font = {bold:true};
+  ws.getCell(total1Row,1).alignment = {horizontal:'right'};
+  for(var c=1;c<=5;c++){ totalFillCell(total1Row,c); ws.getCell(total1Row,c).border = thinBorder(); }
+  var t1 = formulaCell(total1Row,4,'SUM(D'+startOps+':D'+lastOps+')',CUR);
+  t1.font = {bold:true};
+  var TOTAL1 = 'D'+total1Row;
+
+  var totalFraisOpsRow = total1Row+1;
+  ws.mergeCells(totalFraisOpsRow,1,totalFraisOpsRow,3);
+  ws.getCell(totalFraisOpsRow,1).value = 'Dont total des frais de virement (information seule, non inclus ci-dessus)';
+  ws.getCell(totalFraisOpsRow,1).alignment = {horizontal:'right'};
+  formulaCell(totalFraisOpsRow,5,'SUM(E'+startOps+':E'+lastOps+')',CUR);
+  borderRow(totalFraisOpsRow,5);
+
+  // ===== SECTION 2: PORTEFEUILLE =====
+  var sec2 = totalFraisOpsRow+2;
+  titleRow(sec2, 'BILAN DU PORTEFEUILLE D\'ACTIONS', 7);
+  var hrow2 = sec2+1;
+  headerRow(hrow2, ['N°','Titre (Action)','CUMP','Nombre de titres','Montant investi','Date (libellé)','Date (valeur)']);
+  var start2 = hrow2+1;
+  state.achats.forEach(function(a, idx){
+    var r = start2+idx;
+    ws.getCell(r,1).value = idx+1;
+    ws.getCell(r,2).value = a.titre;
+    inputCell(r,3,Number(a.cump)||0,CUR);
+    inputCell(r,4,Number(a.qte)||0,'#,##0');
+    formulaCell(r,5,'C'+r+'*D'+r,CUR);
+    ws.getCell(r,6).value = a.date;
+    var dv = inputCell(r,7, a.date ? new Date(a.date) : null, DATEFMT);
+    borderRow(r,7);
+  });
+  var last2 = start2 + state.achats.length - 1;
+  var ACH_TITRE = '$B$'+start2+':$B$'+last2;
+  var ACH_QTE = '$D$'+start2+':$D$'+last2;
+  var ACH_MONTANT = '$E$'+start2+':$E$'+last2;
+  var ACH_CUMP = '$C$'+start2+':$C$'+last2;
+  var ACH_DATEVAL = '$G$'+start2+':$G$'+last2;
+  function cumpMoyenF(r){
+    return 'IFERROR(SUMIF('+ACH_TITRE+',B'+r+','+ACH_MONTANT+')/SUMIF('+ACH_TITRE+',B'+r+','+ACH_QTE+'),0)';
+  }
+  function cumpAtF(r, dateRef, prefix){
+    prefix = prefix || '';
+    return 'IFERROR(SUMIFS('+prefix+ACH_MONTANT+','+prefix+ACH_TITRE+',B'+r+','+prefix+ACH_DATEVAL+',"<="&'+dateRef+')/'+
+           'SUMIFS('+prefix+ACH_QTE+','+prefix+ACH_TITRE+',B'+r+','+prefix+ACH_DATEVAL+',"<="&'+dateRef+'),'+cumpMoyenF(r)+')';
+  }
+
+  var total2Row = last2+1;
+  ws.mergeCells(total2Row,1,total2Row,4);
+  ws.getCell(total2Row,1).value = 'Total 2 – Total investi en titres (brut, avant ventes)';
+  ws.getCell(total2Row,1).font = {bold:true};
+  ws.getCell(total2Row,1).alignment = {horizontal:'right'};
+  for(var c=1;c<=7;c++){ totalFillCell(total2Row,c); ws.getCell(total2Row,c).border = thinBorder(); }
+  var t2 = formulaCell(total2Row,5,'SUM(E'+start2+':E'+last2+')',CUR);
+  t2.font = {bold:true};
+  var TOTAL2 = 'E'+total2Row;
+
+  // ---- Ventes ----
+  var ventesTitleRow = total2Row+2;
+  subheadRow(ventesTitleRow, "Ventes d'actions", 7);
+  var ventesHrow = ventesTitleRow+1;
+  headerRow(ventesHrow, ['N°','Titre (Action)','Qté vendue','Prix de vente unit.','Montant vente','Plus/moins-value','Date (valeur)']);
+  var ventesStart = ventesHrow+1;
+  var ventesList = state.ventes || [];
+  var ventesRowsCount = Math.max(ventesList.length, 1);
+  for(var i=0;i<ventesRowsCount;i++){
+    var r = ventesStart+i;
+    var v = ventesList[i];
+    ws.getCell(r,1).value = i+1;
+    if(v){
+      ws.getCell(r,2).value = v.titre;
+      inputCell(r,3,Number(v.qte)||0,'#,##0');
+      inputCell(r,4,Number(v.prixVente)||0,CUR);
+      formulaCell(r,5,'C'+r+'*D'+r,CUR);
+      formulaCell(r,6,'(D'+r+'-'+cumpAtF(r,'G'+r)+')*C'+r,CUR);
+      inputCell(r,7, v.date ? new Date(v.date) : null, DATEFMT);
+    } else {
+      ws.getCell(r,3).numFmt = '#,##0';
+      ws.getCell(r,4).numFmt = CUR;
+      formulaCell(r,5,'IF(C'+r+'="","",C'+r+'*D'+r+')',CUR);
+      formulaCell(r,6,'IF(C'+r+'="","",(D'+r+'-'+cumpAtF(r,'G'+r)+')*C'+r+')',CUR);
+      ws.getCell(r,7).numFmt = DATEFMT;
+    }
+    borderRow(r,7);
+  }
+  var ventesLast = ventesStart+ventesRowsCount-1;
+  var VTE_TITRE = '$B$'+ventesStart+':$B$'+ventesLast;
+  var VTE_QTE = '$C$'+ventesStart+':$C$'+ventesLast;
+  var VTE_MONTANT = '$E$'+ventesStart+':$E$'+ventesLast;
+  var VTE_PV = '$F$'+ventesStart+':$F$'+ventesLast;
+  var VTE_DATEVAL = '$G$'+ventesStart+':$G$'+ventesLast;
+
+  var ventesTotalRow = ventesLast+1;
+  ws.mergeCells(ventesTotalRow,1,ventesTotalRow,4);
+  ws.getCell(ventesTotalRow,1).value = 'Total ventes';
+  ws.getCell(ventesTotalRow,1).font = {bold:true};
+  ws.getCell(ventesTotalRow,1).alignment = {horizontal:'right'};
+  for(var c=1;c<=7;c++){ totalFillCell(ventesTotalRow,c); ws.getCell(ventesTotalRow,c).border = thinBorder(); }
+  var tv = formulaCell(ventesTotalRow,5,'SUM('+VTE_MONTANT+')',CUR); tv.font={bold:true};
+  var tpv = formulaCell(ventesTotalRow,6,'SUM('+VTE_PV+')',CUR); tpv.font={bold:true};
+  var TOTAL_VENTES = 'E'+ventesTotalRow;
+  var TOTAL_PV = 'F'+ventesTotalRow;
+
+  // ---- Position consolidee ----
+  var poscTitleRow = ventesTotalRow+2;
+  subheadRow(poscTitleRow, "Position consolidée par titre (nette des ventes)", 7);
+  var poscHrow = poscTitleRow+1;
+  headerRow(poscHrow, ['N°','Titre','Nombre net de titres','Montant investi (net)','Cours actuel','Valeur actuelle','Plus-value latente']);
+  var poscStart = poscHrow+1;
+  var titresUniques = [];
+  state.achats.forEach(function(a){ if(titresUniques.indexOf(a.titre)===-1) titresUniques.push(a.titre); });
+  var coursActuels = state.coursActuels || {};
+  titresUniques.forEach(function(titre, idx){
+    var r = poscStart+idx;
+    ws.getCell(r,1).value = idx+1;
+    ws.getCell(r,2).value = titre;
+    formulaCell(r,3,'SUMIF('+ACH_TITRE+',B'+r+','+ACH_QTE+')-SUMIF('+VTE_TITRE+',B'+r+','+VTE_QTE+')','#,##0');
+    formulaCell(r,4,'C'+r+'*'+cumpMoyenF(r),CUR);
+    var coursInfo = coursActuels[titre];
+    var coursVal = (coursInfo && coursInfo.cours != null && coursInfo.cours !== '') ? Number(coursInfo.cours) : null;
+    if(coursVal != null){
+      inputCell(r,5,coursVal,CUR);
+    } else {
+      ws.getCell(r,5).numFmt = CUR;
+    }
+    formulaCell(r,6,'IF(E'+r+'="",D'+r+',C'+r+'*E'+r+')',CUR);
+    formulaCell(r,7,'IF(E'+r+'="",0,(E'+r+'-'+cumpMoyenF(r)+')*C'+r+')',CUR);
+    borderRow(r,7);
+  });
+  var poscLast = poscStart+titresUniques.length-1;
+  var POSC_VALEUR = 'F'+poscStart+':F'+poscLast;
+  var POSC_PVLAT = 'G'+poscStart+':G'+poscLast;
+
+  // ===== SECTION 3: LIQUIDITE =====
+  var sec3 = poscLast+3;
+  titleRow(sec3, 'LIQUIDITÉ', 7);
+  var hrow3 = sec3+1;
+  headerRow(hrow3, ['N°','Type','Titre concerné','Libellé','Montant','Année','Date (libre)']);
+  var start3 = hrow3+1;
+  var n = 1;
+  var r = start3;
+  ws.getCell(r,1).value = n++;
+  ws.getCell(r,2).value = 'Vente';
+  ws.getCell(r,3).value = 'Toutes actions';
+  ws.getCell(r,4).value = "Total ventes d'actions (voir Portefeuille)";
+  formulaCell(r,5,TOTAL_VENTES,CUR);
+  ws.getCell(r,6).value = '—';
+  ws.getCell(r,7).value = 'cumulé';
+  borderRow(r,7);
+  var years = Array.from(new Set((state.dividendes||[]).map(function(d){return d.annee;}))).sort();
+  var divMovementRows = {};
+  years.forEach(function(y){
+    r = start3 + n; n++;
+    ws.getCell(r,1).value = n-1;
+    ws.getCell(r,2).value = 'Dividende';
+    ws.getCell(r,3).value = 'Toutes actions';
+    ws.getCell(r,4).value = 'Total dividendes reçus '+y+' (voir onglet Dividendes)';
+    ws.getCell(r,6).value = y;
+    ws.getCell(r,7).value = '31/12/'+y;
+    borderRow(r,7);
+    divMovementRows[y] = r;
+  });
+  var mvList = state.mouvements || [];
+  var mvStart = start3+n;
+  mvList.forEach(function(m, idx){
+    var rr = mvStart+idx;
+    ws.getCell(rr,1).value = n+idx;
+    ws.getCell(rr,2).value = m.type;
+    ws.getCell(rr,3).value = m.titre || '';
+    ws.getCell(rr,4).value = m.libelle || '';
+    inputCell(rr,5,Number(m.montant)||0,CUR);
+    if(m.annee) ws.getCell(rr,6).value = m.annee;
+    ws.getCell(rr,7).value = m.date || '';
+    borderRow(rr,7);
+  });
+  var last3 = mvList.length ? (mvStart+mvList.length-1) : (mvStart-1);
+  // au moins une ligne vide si aucun mouvement manuel, pour que les plages SUMIF restent valides
+  if(last3 < mvStart){ borderRow(mvStart,7); last3 = mvStart; }
+
+  var recapRow = last3+1;
+  ws.getCell(recapRow,3).value = 'Total dividendes';
+  ws.getCell(recapRow,3).alignment = {horizontal:'right'};
+  var tdiv = formulaCell(recapRow,5,'SUMIF(B'+start3+':B'+last3+',"Dividende",E'+start3+':E'+last3+')',CUR);
+
+  var recapRow2 = recapRow+1;
+  ws.getCell(recapRow2,3).value = 'Total frais';
+  ws.getCell(recapRow2,3).alignment = {horizontal:'right'};
+  formulaCell(recapRow2,5,'SUMIF(B'+start3+':B'+last3+',"Frais",E'+start3+':E'+last3+')',CUR);
+
+  var recapRow3 = recapRow2+1;
+  ws.getCell(recapRow3,3).value = 'Total autres mouvements';
+  ws.getCell(recapRow3,3).alignment = {horizontal:'right'};
+  formulaCell(recapRow3,5,'SUMIF(B'+start3+':B'+last3+',"Autre",E'+start3+':E'+last3+')',CUR);
+
+  // ---- Frais & autres par annee ----
+  var fyTitleRow = recapRow3+2;
+  subheadRow(fyTitleRow, 'Frais & autres mouvements par année', 7);
+  var fyHrow = fyTitleRow+1;
+  headerRow(fyHrow, ['Année','Total frais','Total autres','','','','']);
+  var fyStart = fyHrow+1;
+  var fyYears = Array.from(new Set(mvList.filter(function(m){return m.annee;}).map(function(m){return m.annee;}))).sort();
+  if(!fyYears.length) fyYears = years.length ? years : [new Date().getFullYear()];
+  fyYears.forEach(function(y, idx){
+    var rr = fyStart+idx;
+    inputCell(rr,1,y);
+    formulaCell(rr,2,'SUMIFS(E'+start3+':E'+last3+',B'+start3+':B'+last3+',"Frais",F'+start3+':F'+last3+',A'+rr+')',CUR);
+    formulaCell(rr,3,'SUMIFS(E'+start3+':E'+last3+',B'+start3+':B'+last3+',"Autre",F'+start3+':F'+last3+',A'+rr+')',CUR);
+    borderRow(rr,3);
+  });
+  var fyLast = fyStart+fyYears.length-1;
+
+  var liqReelleRow = fyLast+2;
+  ws.getCell(liqReelleRow,3).value = 'Liquidité réelle actuelle';
+  ws.getCell(liqReelleRow,3).alignment = {horizontal:'right'};
+  inputCell(liqReelleRow,5,Number(state.liquiditeReelle.montant)||0,CUR);
+  ws.getCell(liqReelleRow,7).value = state.liquiditeReelle.date || '';
+
+  var liqTheoRow = liqReelleRow+1;
+  ws.getCell(liqTheoRow,3).value = 'Liquidité théorique';
+  ws.getCell(liqTheoRow,3).font = {bold:true};
+  ws.getCell(liqTheoRow,3).alignment = {horizontal:'right'};
+  var lt = formulaCell(liqTheoRow,5,TOTAL1+'-'+TOTAL2+'+SUM(E'+start3+':E'+last3+')',CUR);
+  lt.font = {bold:true}; totalFillCell(liqTheoRow,5); totalFillCell(liqTheoRow,3);
+  var LIQ_THEO = 'E'+liqTheoRow, LIQ_REELLE = 'E'+liqReelleRow;
+
+  var ecartRow = liqTheoRow+1;
+  ws.getCell(ecartRow,3).value = 'Écart (doit valoir 0 si tout est saisi)';
+  ws.getCell(ecartRow,3).font = {bold:true};
+  ws.getCell(ecartRow,3).alignment = {horizontal:'right'};
+  var ec = formulaCell(ecartRow,5,LIQ_REELLE+'-'+LIQ_THEO,CUR);
+  ec.font = {bold:true}; totalFillCell(ecartRow,5); totalFillCell(ecartRow,3);
+
+  // Data validation Type
+  ws.dataValidations.add('B'+start3+':B'+last3, {
+    type:'list', allowBlank:true, formulae:['"Dividende,Frais,Autre,Vente"']
+  });
+
+  // ===== SECTION 4: SYNTHESE =====
+  var sec4 = ecartRow+2;
+  titleRow(sec4, 'SYNTHÈSE', 6);
+  r = sec4+1;
+  var VALEUR_ACTUELLE_CELL = null, PVLAT_CELL = null;
+  [
+    ['Total des fonds versés', TOTAL1],
+    ['Total investi en titres (brut)', TOTAL2],
+    ['Total dividendes reçus', tdiv.address],
+    ["Total ventes d'actions", TOTAL_VENTES],
+    ['Plus/moins-value réalisée', TOTAL_PV],
+    ['Valeur actuelle du portefeuille', 'SUM('+POSC_VALEUR+')'],
+    ['Plus/moins-value latente', 'SUM('+POSC_PVLAT+')']
+  ].forEach(function(pair){
+    ws.mergeCells(r,1,r,4);
+    ws.getCell(r,1).value = pair[0];
+    ws.getCell(r,1).alignment = {horizontal:'right'};
+    var cell = formulaCell(r,5,pair[1],CUR);
+    borderRow(r,5);
+    if(pair[0].indexOf('Valeur actuelle')===0) VALEUR_ACTUELLE_CELL = cell.address;
+    if(pair[0].indexOf('Plus/moins-value latente')===0) PVLAT_CELL = cell.address;
+    r++;
+  });
+  var perfRow = r;
+  ws.mergeCells(perfRow,1,perfRow,4);
+  ws.getCell(perfRow,1).value = 'Performance globale';
+  ws.getCell(perfRow,1).alignment = {horizontal:'right'};
+  formulaCell(perfRow,5,'IF('+TOTAL2+'=0,0,('+VALEUR_ACTUELLE_CELL+'+'+tdiv.address+'+'+TOTAL_VENTES+'-'+TOTAL2+')/'+TOTAL2+')',PCT);
+  borderRow(perfRow,5);
+  r = perfRow+1;
+  var soldeRow = r;
+  ws.mergeCells(soldeRow,1,soldeRow,4);
+  ws.getCell(soldeRow,1).value = 'Liquidité théorique restante';
+  ws.getCell(soldeRow,1).font = {bold:true};
+  ws.getCell(soldeRow,1).alignment = {horizontal:'right'};
+  var sc = formulaCell(soldeRow,5,LIQ_THEO,CUR); sc.font={bold:true};
+  for(var c=1;c<=5;c++){ totalFillCell(soldeRow,c); ws.getCell(soldeRow,c).border = thinBorder(); }
+
+  ws.views = [{state:'frozen', ySplit:4}];
+
+  // ===== SHEET 2: DIVIDENDES =====
+  var ws2 = wb.addWorksheet('Dividendes');
+  ws2.columns = [{width:5},{width:18},{width:8},{width:16},{width:15},{width:14},{width:14},{width:12},{width:14}];
+  ws2.mergeCells(1,1,1,9);
+  ws2.getCell(1,1).value = 'HISTORIQUE DES DIVIDENDES';
+  ws2.getCell(1,1).font = {bold:true, size:14, color:{argb:NAVY}};
+  ws2.getCell(1,1).alignment = {horizontal:'center'};
+
+  var hrowD = 3;
+  var headersD = ['N°','Titre','Année','Date détachement','Dividende/action','Nb titres retenu','Total dividende','CUMP','Capital retenu'];
+  headersD.forEach(function(h,i){
+    var c = ws2.getCell(hrowD, i+1);
+    c.value = h;
+    c.font = {bold:true, size:11, color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern', pattern:'solid', fgColor:{argb:NAVY}};
+    c.alignment = {horizontal:'center', wrapText:true};
+    c.border = thinBorder();
+  });
+  var startD = hrowD+1;
+  var divList = state.dividendes || [];
+  divList.forEach(function(d, idx){
+    var rr = startD+idx;
+    ws2.getCell(rr,1).value = idx+1;
+    ws2.getCell(rr,2).value = d.titre;
+    ws2.getCell(rr,3).value = d.annee;
+    var dcell = ws2.getCell(rr,4);
+    dcell.value = d.dateDetachement ? new Date(d.dateDetachement) : null;
+    dcell.font = {color:{argb:'FF0000FF'}};
+    dcell.numFmt = DATEFMT;
+    var divCell = ws2.getCell(rr,5);
+    divCell.value = Number(d.dividendeParAction)||0;
+    divCell.font = {color:{argb:'FF0000FF'}};
+    divCell.numFmt = CUR;
+    if(d.dateDetachement){
+      ws2.getCell(rr,6).value = {formula:
+        'MAX(0,SUMIFS(Bilan!'+ACH_QTE+',Bilan!'+ACH_TITRE+',B'+rr+',Bilan!'+ACH_DATEVAL+',"<="&D'+rr+')'+
+        '-SUMIFS(Bilan!'+VTE_QTE+',Bilan!'+VTE_TITRE+',B'+rr+',Bilan!'+VTE_DATEVAL+',"<="&D'+rr+'))'
+      };
+    } else {
+      ws2.getCell(rr,6).value = 0;
+    }
+    ws2.getCell(rr,6).numFmt = '#,##0';
+    ws2.getCell(rr,7).value = {formula:'E'+rr+'*F'+rr}; ws2.getCell(rr,7).numFmt = CUR;
+    ws2.getCell(rr,8).value = {formula:'IFERROR(SUMIFS(Bilan!'+ACH_MONTANT+',Bilan!'+ACH_TITRE+',B'+rr+',Bilan!'+ACH_DATEVAL+',"<="&D'+rr+')/SUMIFS(Bilan!'+ACH_QTE+',Bilan!'+ACH_TITRE+',B'+rr+',Bilan!'+ACH_DATEVAL+',"<="&D'+rr+'),0)'};
+    ws2.getCell(rr,8).numFmt = CUR;
+    ws2.getCell(rr,9).value = {formula:'F'+rr+'*H'+rr}; ws2.getCell(rr,9).numFmt = CUR;
+    for(var cc=1;cc<=9;cc++) ws2.getCell(rr,cc).border = thinBorder();
+  });
+  var lastD = divList.length ? (startD+divList.length-1) : startD-1;
+  if(lastD < startD){ for(var cc=1;cc<=9;cc++) ws2.getCell(startD,cc).border = thinBorder(); lastD = startD; }
+
+  var recTitleRow = lastD+2;
+  ws2.mergeCells(recTitleRow,1,recTitleRow,9);
+  ws2.getCell(recTitleRow,1).value = 'Totaux par année';
+  ws2.getCell(recTitleRow,1).font = {bold:true, size:10, color:{argb:NAVY}};
+  ws2.getCell(recTitleRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:SUBHEAD}};
+  ws2.getCell(recTitleRow,1).alignment = {horizontal:'center'};
+  var recHrow = recTitleRow+1;
+  ['Année','Total dividendes','Capital investi retenu','Rendement global','Rémunération mensuelle'].forEach(function(h,i){
+    var c = ws2.getCell(recHrow,i+1);
+    c.value = h; c.font = {bold:true,size:11,color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};
+    c.alignment = {horizontal:'center', wrapText:true}; c.border = thinBorder();
+  });
+  var recStart = recHrow+1;
+  years.forEach(function(y, idx){
+    var rr = recStart+idx;
+    inputCell(rr,1,y,null,ws2);
+    var totF = formulaCell(rr,2,'SUMIF(C'+startD+':C'+lastD+',A'+rr+',G'+startD+':G'+lastD+')',CUR,ws2);
+    var capF = formulaCell(rr,3,'SUMIF(C'+startD+':C'+lastD+',A'+rr+',I'+startD+':I'+lastD+')',CUR,ws2);
+    formulaCell(rr,4,'IF(C'+rr+'=0,0,B'+rr+'/C'+rr+')',PCT,ws2);
+    formulaCell(rr,5,'B'+rr+'/12',CUR,ws2);
+    for(var cc=1;cc<=5;cc++) ws2.getCell(rr,cc).border = thinBorder();
+    divMovementRows[y] && (function(){
+      formulaCell(divMovementRows[y],5,"Dividendes!B"+rr,CUR);
+    })();
+  });
+  var recLastRow = recStart + years.length - 1;
+
+  // ---- Total par titre (depuis le debut) : miroir de l'onglet Dividendes de l'app ----
+  var titreTitleRow = recLastRow + 2;
+  ws2.mergeCells(titreTitleRow,1,titreTitleRow,9);
+  ws2.getCell(titreTitleRow,1).value = 'Total par titre (depuis le début)';
+  ws2.getCell(titreTitleRow,1).font = {bold:true, size:10, color:{argb:NAVY}};
+  ws2.getCell(titreTitleRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:SUBHEAD}};
+  ws2.getCell(titreTitleRow,1).alignment = {horizontal:'center'};
+  var titreHrow = titreTitleRow+1;
+  ['Titre','Total dividendes','Rendement réel (sur CUMP actuel)'].forEach(function(h,i){
+    var c = ws2.getCell(titreHrow, i+1);
+    c.value = h; c.font = {bold:true,size:11,color:{argb:'FFFFFFFF'}};
+    c.fill = {type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};
+    c.alignment = {horizontal:'center', wrapText:true}; c.border = thinBorder();
+  });
+  var titresUniquesDiv = [];
+  divList.forEach(function(d){ if(titresUniquesDiv.indexOf(d.titre)===-1) titresUniquesDiv.push(d.titre); });
+  var titreStart = titreHrow+1;
+  titresUniquesDiv.forEach(function(titre, idx){
+    var rr = titreStart+idx;
+    ws2.getCell(rr,1).value = titre;
+    formulaCell(rr,2,'SUMIF(B'+startD+':B'+lastD+',A'+rr+',G'+startD+':G'+lastD+')',CUR,ws2);
+    var qteActuelleF = 'SUMIF(Bilan!'+ACH_TITRE+',A'+rr+',Bilan!'+ACH_QTE+')-SUMIF(Bilan!'+VTE_TITRE+',A'+rr+',Bilan!'+VTE_QTE+')';
+    var cumpActuelF = 'IFERROR(SUMIF(Bilan!'+ACH_TITRE+',A'+rr+',Bilan!'+ACH_MONTANT+')/SUMIF(Bilan!'+ACH_TITRE+',A'+rr+',Bilan!'+ACH_QTE+'),0)';
+    formulaCell(rr,3,'IF(('+qteActuelleF+')*('+cumpActuelF+')=0,"",B'+rr+'/(('+qteActuelleF+')*('+cumpActuelF+')))',PCT,ws2);
+    ws2.getCell(rr,1).border = thinBorder();
+    ws2.getCell(rr,2).border = thinBorder();
+    ws2.getCell(rr,3).border = thinBorder();
+  });
+  var titreLast = titreStart + titresUniquesDiv.length - 1;
+  var titreTotalRow = titreLast+1;
+  ws2.getCell(titreTotalRow,1).value = 'Total';
+  ws2.getCell(titreTotalRow,1).font = {bold:true};
+  var totDivTitreCell = formulaCell(titreTotalRow,2,'SUM(B'+titreStart+':B'+titreLast+')',CUR,ws2);
+  totDivTitreCell.font = {bold:true};
+  ws2.getCell(titreTotalRow,1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  ws2.getCell(titreTotalRow,2).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  ws2.getCell(titreTotalRow,3).fill = {type:'pattern', pattern:'solid', fgColor:{argb:TOTALFILL}};
+  ws2.getCell(titreTotalRow,1).border = thinBorder();
+  ws2.getCell(titreTotalRow,3).border = thinBorder();
+  ws2.getCell(titreTotalRow,2).border = thinBorder();
+
+  ws2.views = [{state:'frozen', xSplit:3, ySplit:3}];
+
+  return wb;
+}
+
+/* ---------- Export Excel (.xlsx) via ExcelJS (charge depuis un CDN a la demande) ---------- */
+var EXCELJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js';
+var exceljsLoadPromise = null;
+function ensureExcelJS(){
+  if(window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  if(exceljsLoadPromise) return exceljsLoadPromise;
+  exceljsLoadPromise = new Promise(function(resolve, reject){
+    var s = document.createElement('script');
+    s.src = EXCELJS_CDN;
+    s.onload = function(){
+      if(window.ExcelJS) resolve(window.ExcelJS);
+      else reject(new Error("ExcelJS introuvable apres chargement"));
+    };
+    s.onerror = function(){ reject(new Error("Impossible de charger la bibliotheque Excel (connexion internet requise)")); };
+    document.head.appendChild(s);
+  });
+  return exceljsLoadPromise;
+}
+async function exportToXlsx(btn){
+  var original = btn.textContent;
+  btn.textContent = 'Préparation…';
+  btn.disabled = true;
+  try{
+    var ExcelJSLib = await ensureExcelJS();
+    var wb = buildWorkbook(ExcelJSLib, Object.assign({}, state, {coursActuels: coursEffectifs()}));
+    var buffer = await wb.xlsx.writeBuffer();
+    var blob = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var today = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = 'Bilan_compte_titre_brvm_'+today+'.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+  }catch(err){
+    alert("Export Excel impossible : "+(err && err.message ? err.message : "erreur inconnue")+". Verifie ta connexion internet, ou utilise l'export JSON a la place.");
+  }finally{
+    btn.textContent = original;
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('app').addEventListener('click', function(e){
+  if(e.target.id === 'btn-export-xlsx'){
+    exportToXlsx(e.target);
+    return;
+  }
+  if(e.target.id === 'btn-export'){
+    try{
+      var blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      var today = new Date().toISOString().slice(0,10);
+      a.href = url;
+      a.download = 'compte-titre-brvm-'+today+'.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+    }catch(err){ alert('Export impossible sur ce navigateur.'); }
+    return;
+  }
+  if(e.target.id === 'btn-import'){
+    document.getElementById('file-import').click();
+    return;
+  }
+  if(e.target.id === 'btn-signout'){
+    signOutApp();
+    return;
+  }
+  var autoAllBtn = e.target.closest('[data-autoall]');
+  if(autoAllBtn){
+    if(!autoAllBtn.classList.contains('confirming')){
+      autoAllBtn.classList.add('confirming');
+      autoAllBtn.textContent = 'Confirmer ?';
+      return;
+    }
+    state.coursActuels = {};
+    render(); scheduleSave();
+    return;
+  }
+  var validateAllBtn = e.target.closest('[data-validate-all-div]');
+  if(validateAllBtn){
+    openValidateAllSheet();
+    return;
+  }
+  var toggleSec = e.target.closest('[data-toggle-section]');
+  if(toggleSec){
+    var secKey = toggleSec.dataset.toggleSection;
+    expandedSections[secKey] = !expandedSections[secKey];
+    render();
+    return;
+  }
+  var exactEl = e.target.closest('[data-exact]');
+  if(exactEl){
+    showExact(exactEl.dataset.exact, exactEl.dataset.desc||'');
+    return;
+  }
+  var addBtn = e.target.closest('[data-add]');
+  if(addBtn){
+    openForm(addBtn.dataset.add, null);
+    return;
+  }
+  var restoreBtn = e.target.closest('[data-restore]');
+  if(restoreBtn){
+    var rid = restoreBtn.dataset.restore;
+    var idx = state.corbeille.findIndex(function(x){return x.id===rid;});
+    if(idx > -1){
+      var entry = state.corbeille.splice(idx,1)[0];
+      state[entry.listName].push(entry.item);
+    }
+    render(); scheduleSave();
+    return;
+  }
+  var purgeBtn = e.target.closest('[data-purge]');
+  if(purgeBtn){
+    if(!purgeBtn.classList.contains('confirming')){
+      purgeBtn.classList.add('confirming');
+      purgeBtn.textContent = 'Confirmer ?';
+      return;
+    }
+    var pid = purgeBtn.dataset.purge;
+    state.corbeille = state.corbeille.filter(function(x){return x.id!==pid;});
+    render(); scheduleSave();
+    return;
+  }
+  var card = e.target.closest('[data-open]');
+  if(!card) return;
+  openForm(card.dataset.open, card.dataset.id);
+});
+
+var FAB_MAP = {operations:'operations', portefeuille:'achats', dividendes:'dividendes', liquidite:'mouvements'};
+document.getElementById('fab').addEventListener('click', function(){
+  var kind = FAB_MAP[currentTab];
+  if(!kind) return;
+  openForm(kind, null);
+});
+
+/* ---------- boot ---------- */
+if(!state){
+  state = {operations:[],achats:[],ventes:[],dividendes:[],mouvements:[],corbeille:[],coursActuels:{},liquiditeReelle:{montant:0,date:''}};
+}
+if(!state.corbeille) state.corbeille = [];
+if(!state.ventes) state.ventes = [];
+if(!state.coursActuels) state.coursActuels = {};
+
+var booted = false;
+function finishBoot(){
+  if(booted) return;
+  booted = true;
+  loadAutoCours();
+  loadAutoDividendes();
+  render();
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./sw.js').catch(function(){ /* pas grave */ });
+    });
+  }
+}
+
+if(FIREBASE_CONFIGURED && initFirebase()){
+  wireAuthScreen();
+  var authSeen = false;
+  fbAuth.onAuthStateChanged(function(user){
+    if(user){
+      showAuthScreen(false);
+      if(!authSeen){ authSeen = true; pullStateFromCloudThenBoot(); }
+    } else {
+      authSeen = false;
+      showAuthScreen(true);
+    }
+  });
+} else {
+  finishBoot();
+}
+
+})();
+</script></body></html>
