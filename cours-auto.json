@@ -1,26 +1,26 @@
 {
-  "updatedAt": "2026-10-04T22:09:18.463974+00:00",
+  "updatedAt": "2026-10-06T00:32:09.781690+00:00",
   "source": "https://www.brvm.org/fr/capitalisations/0",
   "cours": {
     "CBI BF": {
       "cours": 31500,
-      "date": "04/10/2026"
+      "date": "06/10/2026"
     },
     "BOA Mali": {
-      "cours": 6090,
-      "date": "04/10/2026"
+      "cours": 6100,
+      "date": "06/10/2026"
     },
     "BOA Bénin": {
-      "cours": 9385,
-      "date": "04/10/2026"
+      "cours": 9380,
+      "date": "06/10/2026"
     },
     "BICB": {
-      "cours": 8800,
-      "date": "04/10/2026"
+      "cours": 8600,
+      "date": "06/10/2026"
     },
     "SNTS": {
       "cours": 45000,
-      "date": "04/10/2026"
+      "date": "06/10/2026"
     }
   }
 }
