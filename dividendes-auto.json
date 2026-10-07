@@ -1,7 +1,27 @@
 {
-  "updatedAt": "2026-10-06T22:50:51.093788+00:00",
+  "updatedAt": "2026-10-07T09:32:32.720982+00:00",
   "source": "https://www.brvm.org/fr/esv/paiement-de-dividendes",
   "tickers": {
+    "PRSC": [
+      {
+        "dateExDividende": "2024-09-20",
+        "datePaiement": "2024-09-24",
+        "exercice": 2023,
+        "montant": 182.7
+      },
+      {
+        "dateExDividende": "2025-09-26",
+        "datePaiement": "2025-09-30",
+        "exercice": 2024,
+        "montant": 207.0
+      },
+      {
+        "dateExDividende": "2026-10-22",
+        "datePaiement": "2026-10-23",
+        "exercice": 2025,
+        "montant": 209.0
+      }
+    ],
     "SMBC": [
       {
         "dateExDividende": "2024-09-26",
@@ -436,12 +456,6 @@
     ],
     "BOAM": [
       {
-        "dateExDividende": "2024-05-16",
-        "datePaiement": "2024-05-21",
-        "exercice": 2023,
-        "montant": 144.0
-      },
-      {
         "dateExDividende": "2025-05-30",
         "datePaiement": "2025-06-03",
         "exercice": 2024,
@@ -548,20 +562,6 @@
         "datePaiement": "2025-09-30",
         "exercice": 2024,
         "montant": 1320.0
-      }
-    ],
-    "PRSC": [
-      {
-        "dateExDividende": "2024-09-20",
-        "datePaiement": "2024-09-24",
-        "exercice": 2023,
-        "montant": 182.7
-      },
-      {
-        "dateExDividende": "2025-09-26",
-        "datePaiement": "2025-09-30",
-        "exercice": 2024,
-        "montant": 207.0
       }
     ],
     "SDSC": [
