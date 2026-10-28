@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-10-28T13:21:49.601250+00:00",
-  "dateBulletin": "2026-10-27",
-  "source": "https://bfin.brvm.org/boc/BOC_JOUR/BOC_20261027.pdf",
+  "updatedAt": "2026-10-28T20:28:01.770455+00:00",
+  "dateBulletin": "2026-10-28",
+  "source": "https://bfin.brvm.org/boc/BOC_JOUR/BOC_20261028.pdf",
   "marche": {
-    "per": 17.11,
-    "rendement": 7.49
+    "per": 17.38,
+    "rendement": 7.42
   },
   "secteurs": {
-    "TELECOMMUNICATIONS": 14.1,
-    "CONSOMMATION DISCRETIONNAIRE": 37.83,
-    "SERVICES FINANCIERS": 16.08,
-    "CONSOMMATION DE BASE": 12.52,
-    "INDUSTRIELS": 137.06,
-    "ENERGIE": 17.96,
-    "SERVICES PUBLICS": 21.57
+    "TELECOMMUNICATIONS": 14.14,
+    "CONSOMMATION DISCRETIONNAIRE": 39.56,
+    "SERVICES FINANCIERS": 16.2,
+    "CONSOMMATION DE BASE": 12.34,
+    "INDUSTRIELS": 145.28,
+    "ENERGIE": 17.97,
+    "SERVICES PUBLICS": 21.02
   },
   "titres": {
     "ABJC": {
-      "per": 26.23,
-      "rendementNet": 6.3,
+      "per": 26.97,
+      "rendementNet": 6.13,
       "secteurBrvm": "CONSOMMATION DISCRETIONNAIRE"
     },
     "BICB": {
-      "per": 13.61,
-      "rendementNet": 2.98,
+      "per": 13.45,
+      "rendementNet": 3.02,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BICC": {
@@ -32,63 +32,63 @@
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BNBC": {
-      "per": 511.98,
-      "rendementNet": 8.7,
+      "per": 549.08,
+      "rendementNet": 8.11,
       "secteurBrvm": "CONSOMMATION DISCRETIONNAIRE"
     },
     "BOAB": {
-      "per": 18.76,
-      "rendementNet": 6.29,
+      "per": 18.92,
+      "rendementNet": 6.24,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BOABF": {
-      "per": 18.51,
-      "rendementNet": 4.9,
+      "per": 18.17,
+      "rendementNet": 4.99,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BOAC": {
-      "per": 12.71,
-      "rendementNet": 5.29,
+      "per": 13.44,
+      "rendementNet": 5.0,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BOAM": {
-      "per": 14.12,
-      "rendementNet": 5.35,
+      "per": 14.11,
+      "rendementNet": 5.36,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BOAN": {
-      "per": 254.11,
-      "rendementNet": 4.19,
+      "per": 258.94,
+      "rendementNet": 4.11,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "BOAS": {
-      "per": 13.47,
-      "rendementNet": 5.49,
+      "per": 13.49,
+      "rendementNet": 5.48,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "CABC": {
-      "per": 12.28,
-      "rendementNet": 5.09,
+      "per": 12.32,
+      "rendementNet": 5.08,
       "secteurBrvm": "INDUSTRIELS"
     },
     "CBIBF": {
-      "per": 15.3,
-      "rendementNet": 2.87,
+      "per": 15.73,
+      "rendementNet": 2.8,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "CFAC": {
-      "per": 30.49,
-      "rendementNet": 3.92,
+      "per": 30.17,
+      "rendementNet": 3.96,
       "secteurBrvm": "CONSOMMATION DISCRETIONNAIRE"
     },
     "CIEC": {
-      "per": 22.4,
-      "rendementNet": 3.92,
+      "per": 21.76,
+      "rendementNet": 4.04,
       "secteurBrvm": "SERVICES PUBLICS"
     },
     "ECOC": {
-      "per": 14.09,
-      "rendementNet": 4.81,
+      "per": 13.87,
+      "rendementNet": 4.88,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "ETIT": {
@@ -97,18 +97,18 @@
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "FTSC": {
-      "per": 52.21,
-      "rendementNet": 100.09,
+      "per": 54.48,
+      "rendementNet": 95.92,
       "secteurBrvm": "INDUSTRIELS"
     },
     "LNBB": {
-      "per": 17.07,
-      "rendementNet": 4.16,
+      "per": 17.2,
+      "rendementNet": 4.13,
       "secteurBrvm": "CONSOMMATION DISCRETIONNAIRE"
     },
     "NEIC": {
-      "per": 13.16,
-      "rendementNet": 6.69,
+      "per": 14.04,
+      "rendementNet": 6.27,
       "secteurBrvm": "CONSOMMATION DISCRETIONNAIRE"
     },
     "NSBC": {
@@ -117,23 +117,23 @@
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "NTLC": {
-      "per": 16.4,
-      "rendementNet": 2.7,
+      "per": 15.82,
+      "rendementNet": 2.8,
       "secteurBrvm": "CONSOMMATION DE BASE"
     },
     "ONTBF": {
-      "per": 14.29,
-      "rendementNet": 4.76,
+      "per": 14.33,
+      "rendementNet": 4.75,
       "secteurBrvm": "TELECOMMUNICATIONS"
     },
     "ORAC": {
-      "per": 18.85,
-      "rendementNet": 3.35,
+      "per": 19.3,
+      "rendementNet": 3.27,
       "secteurBrvm": "TELECOMMUNICATIONS"
     },
     "ORGT": {
-      "per": 8.71,
-      "rendementNet": 2.19,
+      "per": 8.6,
+      "rendementNet": 2.22,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "PALC": {
@@ -142,18 +142,18 @@
       "secteurBrvm": "CONSOMMATION DE BASE"
     },
     "PRSC": {
-      "per": 16.39,
-      "rendementNet": 4.85,
+      "per": 16.44,
+      "rendementNet": 4.84,
       "secteurBrvm": "CONSOMMATION DISCRETIONNAIRE"
     },
     "SDCC": {
-      "per": 19.42,
-      "rendementNet": 3.64,
+      "per": 19.13,
+      "rendementNet": 3.7,
       "secteurBrvm": "SERVICES PUBLICS"
     },
     "SDSC": {
-      "per": 194.87,
-      "rendementNet": 3.27,
+      "per": 205.27,
+      "rendementNet": 3.11,
       "secteurBrvm": "INDUSTRIELS"
     },
     "SEMC": {
@@ -167,13 +167,13 @@
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "SHEC": {
-      "per": 22.26,
-      "rendementNet": 3.99,
+      "per": 22.1,
+      "rendementNet": 4.02,
       "secteurBrvm": "ENERGIE"
     },
     "SIBC": {
-      "per": 15.99,
-      "rendementNet": 4.21,
+      "per": 15.83,
+      "rendementNet": 4.25,
       "secteurBrvm": "SERVICES FINANCIERS"
     },
     "SLBC": {
@@ -182,28 +182,28 @@
       "secteurBrvm": "CONSOMMATION DE BASE"
     },
     "SMBC": {
-      "per": 8.64,
-      "rendementNet": 4.86,
+      "per": 8.7,
+      "rendementNet": 4.82,
       "secteurBrvm": "ENERGIE"
     },
     "SNTS": {
-      "per": 10.7,
-      "rendementNet": 3.93,
+      "per": 10.16,
+      "rendementNet": 4.14,
       "secteurBrvm": "TELECOMMUNICATIONS"
     },
     "SOGC": {
-      "per": 13.66,
-      "rendementNet": 6.35,
+      "per": 12.98,
+      "rendementNet": 6.68,
       "secteurBrvm": "CONSOMMATION DE BASE"
     },
     "SPHC": {
-      "per": 8.19,
-      "rendementNet": 5.38,
+      "per": 8.2,
+      "rendementNet": 5.37,
       "secteurBrvm": "CONSOMMATION DE BASE"
     },
     "STBC": {
-      "per": 10.44,
-      "rendementNet": 8.05,
+      "per": 10.46,
+      "rendementNet": 8.03,
       "secteurBrvm": "CONSOMMATION DE BASE"
     },
     "TTLC": {
@@ -212,8 +212,8 @@
       "secteurBrvm": "ENERGIE"
     },
     "TTLS": {
-      "per": 17.54,
-      "rendementNet": 4.84,
+      "per": 17.78,
+      "rendementNet": 4.77,
       "secteurBrvm": "ENERGIE"
     }
   }
