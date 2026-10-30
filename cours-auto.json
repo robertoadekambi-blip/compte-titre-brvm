@@ -1,317 +1,317 @@
 {
-  "updatedAt": "2026-10-29T20:28:06.319815+00:00",
+  "updatedAt": "2026-10-30T02:03:24.841952+00:00",
   "source": "https://www.brvm.org/fr/cours-actions/0",
   "dateSeance": null,
   "cours": {
     "CBI BF": {
       "cours": 31900,
-      "date": "29/10/2026"
+      "date": "30/10/2026"
     },
     "BOA Mali": {
       "cours": 5750,
-      "date": "29/10/2026"
+      "date": "30/10/2026"
     },
     "BOA Bénin": {
       "cours": 9300,
-      "date": "29/10/2026"
+      "date": "30/10/2026"
     },
     "BICB": {
       "cours": 8440,
-      "date": "29/10/2026"
+      "date": "30/10/2026"
     },
     "SNTS": {
       "cours": 4150,
-      "date": "29/10/2026"
+      "date": "30/10/2026"
     }
   },
   "tickers": {
     "ABJC": {
       "cours": 3280,
-      "date": "29/10/2026",
-      "coursPrec": 3290,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 3280,
+      "datePrec": "29/10/2026"
     },
     "BBGC": {
       "cours": 9880,
-      "date": "29/10/2026",
-      "coursPrec": 9800,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 9880,
+      "datePrec": "29/10/2026"
     },
     "BICB": {
       "cours": 8440,
-      "date": "29/10/2026",
-      "coursPrec": 8540,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 8440,
+      "datePrec": "29/10/2026"
     },
     "BICC": {
       "cours": 32150,
-      "date": "29/10/2026",
-      "coursPrec": 31500,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 32150,
+      "datePrec": "29/10/2026"
     },
     "BNBC": {
       "cours": 1985,
-      "date": "29/10/2026",
-      "coursPrec": 1850,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 1985,
+      "datePrec": "29/10/2026"
     },
     "BOAB": {
       "cours": 9300,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 9300,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "BOABF": {
       "cours": 8000,
-      "date": "29/10/2026",
-      "coursPrec": 7850,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 8000,
+      "datePrec": "29/10/2026"
     },
     "BOAC": {
       "cours": 12100,
-      "date": "29/10/2026",
-      "coursPrec": 11940,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 12100,
+      "datePrec": "29/10/2026"
     },
     "BOAM": {
       "cours": 5750,
-      "date": "29/10/2026",
-      "coursPrec": 5700,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 5750,
+      "datePrec": "29/10/2026"
     },
     "BOAN": {
       "cours": 5300,
-      "date": "29/10/2026",
-      "coursPrec": 5100,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 5300,
+      "datePrec": "29/10/2026"
     },
     "BOAS": {
       "cours": 8300,
-      "date": "29/10/2026",
-      "coursPrec": 8195,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 8300,
+      "datePrec": "29/10/2026"
     },
     "CABC": {
       "cours": 2925,
-      "date": "29/10/2026",
-      "coursPrec": 2995,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 2925,
+      "datePrec": "29/10/2026"
     },
     "CBIBF": {
       "cours": 31900,
-      "date": "29/10/2026",
-      "coursPrec": 32000,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 31900,
+      "datePrec": "29/10/2026"
     },
     "CFAC": {
       "cours": 1395,
-      "date": "29/10/2026",
-      "coursPrec": 1400,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 1395,
+      "datePrec": "29/10/2026"
     },
     "CIEC": {
       "cours": 5400,
-      "date": "29/10/2026",
-      "coursPrec": 5100,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 5400,
+      "datePrec": "29/10/2026"
     },
     "ECOC": {
       "cours": 15950,
-      "date": "29/10/2026",
-      "coursPrec": 15700,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 15950,
+      "datePrec": "29/10/2026"
     },
     "ETIT": {
       "cours": 64,
-      "date": "29/10/2026",
-      "coursPrec": 60,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 64,
+      "datePrec": "29/10/2026"
     },
     "FTSC": {
       "cours": 1770,
-      "date": "29/10/2026",
-      "coursPrec": 1795,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 1770,
+      "datePrec": "29/10/2026"
     },
     "LNBB": {
       "cours": 3975,
-      "date": "29/10/2026",
-      "coursPrec": 3950,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 3975,
+      "datePrec": "29/10/2026"
     },
     "NEIC": {
       "cours": 2300,
-      "date": "29/10/2026",
-      "coursPrec": 2240,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 2300,
+      "datePrec": "29/10/2026"
     },
     "NSBC": {
       "cours": 18650,
-      "date": "29/10/2026",
-      "coursPrec": 18895,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 18650,
+      "datePrec": "29/10/2026"
     },
     "NTLC": {
       "cours": 13190,
-      "date": "29/10/2026",
-      "coursPrec": 13205,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 13190,
+      "datePrec": "29/10/2026"
     },
     "ONTBF": {
       "cours": 3060,
-      "date": "29/10/2026",
-      "coursPrec": 3050,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 3060,
+      "datePrec": "29/10/2026"
     },
     "ORAC": {
       "cours": 21000,
-      "date": "29/10/2026",
-      "coursPrec": 21500,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 21000,
+      "datePrec": "29/10/2026"
     },
     "ORGT": {
       "cours": 2700,
-      "date": "29/10/2026",
-      "coursPrec": 2660,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 2700,
+      "datePrec": "29/10/2026"
     },
     "PALC": {
       "cours": 7500,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 7500,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "PRSC": {
       "cours": 3800,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 3800,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "SAFC": {
       "cours": 3770,
-      "date": "29/10/2026",
-      "coursPrec": 3810,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 3770,
+      "datePrec": "29/10/2026"
     },
     "SCRC": {
       "cours": 2230,
-      "date": "29/10/2026",
-      "coursPrec": 2295,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 2230,
+      "datePrec": "29/10/2026"
     },
     "SDCC": {
       "cours": 12700,
-      "date": "29/10/2026",
-      "coursPrec": 12690,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 12700,
+      "datePrec": "29/10/2026"
     },
     "SDSC": {
       "cours": 2960,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 2960,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "SEMC": {
       "cours": 1495,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 1495,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "SGBC": {
       "cours": 39990,
-      "date": "29/10/2026",
-      "coursPrec": 38950,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 39990,
+      "datePrec": "29/10/2026"
     },
     "SHEC": {
       "cours": 2115,
-      "date": "29/10/2026",
-      "coursPrec": 2130,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 2115,
+      "datePrec": "29/10/2026"
     },
     "SIBC": {
       "cours": 8800,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 8800,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "SICC": {
       "cours": 8400,
-      "date": "29/10/2026",
+      "date": "30/10/2026",
       "coursPrec": 8400,
-      "datePrec": "28/10/2026"
+      "datePrec": "29/10/2026"
     },
     "SIVC": {
       "cours": 1685,
-      "date": "29/10/2026",
-      "coursPrec": 1670,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 1685,
+      "datePrec": "29/10/2026"
     },
     "SLBC": {
       "cours": 39000,
-      "date": "29/10/2026",
-      "coursPrec": 38705,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 39000,
+      "datePrec": "29/10/2026"
     },
     "SMBC": {
       "cours": 14595,
-      "date": "29/10/2026",
-      "coursPrec": 14500,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 14595,
+      "datePrec": "29/10/2026"
     },
     "SNTS": {
       "cours": 4150,
-      "date": "29/10/2026",
-      "coursPrec": 4250,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 4150,
+      "datePrec": "29/10/2026"
     },
     "SOGC": {
       "cours": 7600,
-      "date": "29/10/2026",
-      "coursPrec": 7505,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 7600,
+      "datePrec": "29/10/2026"
     },
     "SPHC": {
       "cours": 8150,
-      "date": "29/10/2026",
-      "coursPrec": 8005,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 8150,
+      "datePrec": "29/10/2026"
     },
     "STAC": {
       "cours": 1745,
-      "date": "29/10/2026",
-      "coursPrec": 1795,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 1745,
+      "datePrec": "29/10/2026"
     },
     "STBC": {
       "cours": 21300,
-      "date": "29/10/2026",
-      "coursPrec": 21200,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 21300,
+      "datePrec": "29/10/2026"
     },
     "TTLC": {
       "cours": 3025,
-      "date": "29/10/2026",
-      "coursPrec": 2995,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 3025,
+      "datePrec": "29/10/2026"
     },
     "TTLS": {
       "cours": 3700,
-      "date": "29/10/2026",
-      "coursPrec": 3650,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 3700,
+      "datePrec": "29/10/2026"
     },
     "UNLC": {
       "cours": 46000,
-      "date": "29/10/2026",
-      "coursPrec": 45200,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 46000,
+      "datePrec": "29/10/2026"
     },
     "UNXC": {
       "cours": 2100,
-      "date": "29/10/2026",
-      "coursPrec": 2015,
-      "datePrec": "28/10/2026"
+      "date": "30/10/2026",
+      "coursPrec": 2100,
+      "datePrec": "29/10/2026"
     }
   },
   "fractionnements": [
