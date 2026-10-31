@@ -1,0 +1,63 @@
+name: Mise a jour automatique des cours et dividendes BRVM
+
+on:
+  schedule:
+    # Heures en UTC. Le Benin est a UTC+1 (pas d'heure d'ete).
+    # 15h30 UTC = 16h30 au Benin : cours du jour, alertes et Priorites (la BRVM ferme a 16h).
+    - cron: '30 15 * * *'
+    # 22h30 UTC = 23h30 au Benin : bulletin officiel (PER), dividendes, et cours reverifies.
+    - cron: '30 22 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-cours:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v5
+
+      - name: Installer Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Installer les paquets Python
+        run: pip install firebase-admin pypdf --quiet
+
+      - name: Executer le script de mise a jour des cours
+        run: python3 scripts/update_cours.py
+
+      - name: Executer le script de mise a jour des dividendes
+        run: python3 scripts/update_dividendes.py
+
+      - name: Lire le bulletin officiel de la BRVM (PER, rendements)
+        run: python3 scripts/update_boc.py
+
+      - name: Enregistrer les fichiers s'ils ont change
+        run: |
+          git config user.name "brvm-cours-bot"
+          git config user.email "actions@github.com"
+          for f in cours-auto.json dividendes-auto.json boc-auto.json; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m "Mise a jour automatique des cours et dividendes BRVM"
+            git push
+          else
+            echo "Aucun changement a enregistrer."
+          fi
+
+      - name: Copier les donnees dans Firebase
+        # Etape de transition : les fichiers restent aussi dans le depot pour l'instant.
+        continue-on-error: true
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python3 scripts/sync_donnees.py publier
+
+      - name: Verifier les alertes de prix et envoyer les notifications
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python3 scripts/check_alertes.py
