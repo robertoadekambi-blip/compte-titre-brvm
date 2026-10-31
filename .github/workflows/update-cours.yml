@@ -1,0 +1,57 @@
+name: Mise a jour automatique des cours
+
+on:
+  schedule:
+    # Heures en UTC. Le Benin est a UTC+1 (pas d'heure d'ete).
+    # 15h30 UTC = 16h30 au Benin : cours du jour, alertes et Priorites.
+    - cron: '30 15 * * *'
+    # 22h30 UTC = 23h30 au Benin : bulletin officiel (PER), dividendes, et cours reverifies.
+    - cron: '30 22 * * *'
+  workflow_dispatch: {}
+
+# Le robot ne modifie plus le depot : les donnees vont uniquement dans Firebase.
+permissions:
+  contents: read
+
+jobs:
+  update-cours:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v5
+
+      - name: Installer Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Installer les paquets Python
+        run: pip install firebase-admin pypdf --quiet
+
+      - name: Recuperer les donnees precedentes depuis Firebase
+        # Sert de point de comparaison (fractionnements) et de valeur gardee si une
+        # source est indisponible ce jour-la.
+        continue-on-error: true
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python3 scripts/sync_donnees.py recuperer
+
+      - name: Executer le script de mise a jour des cours
+        run: python3 scripts/update_cours.py
+
+      - name: Executer le script de mise a jour des dividendes
+        run: python3 scripts/update_dividendes.py
+
+      - name: Lire le bulletin officiel (PER, rendements)
+        run: python3 scripts/update_boc.py
+
+      - name: Enregistrer les donnees dans Firebase
+        continue-on-error: true
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python3 scripts/sync_donnees.py publier
+
+      - name: Verifier les alertes de prix et envoyer les notifications
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: python3 scripts/check_alertes.py
